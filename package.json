@@ -1,0 +1,51 @@
+{
+  "name": "react-boilerplate",
+  "version": "0.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:livingston/react-boilerplate-alpha.git",
+  "author": "Livingston Samuel @livingston",
+  "license": "MIT",
+  "engines": {
+    "node": ">=7.6.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.25.0",
+    "babel-eslint": "^7.2.3",
+    "babel-loader": "^7.1.1",
+    "babel-plugin-transform-react-jsx": "^6.24.1",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-react": "^6.24.1",
+    "cross-env": "^5.0.1",
+    "eslint": "^4.3.0",
+    "express": "^4.15.3",
+    "html-loader": "^0.5.0",
+    "html-webpack-plugin": "^2.30.1",
+    "lint-staged": "^4.0.2",
+    "nsp": "^2.7.0",
+    "pre-commit": "^1.2.2",
+    "prettier": "^1.5.3",
+    "rimraf": "^2.6.1",
+    "webpack": "^3.4.1",
+    "webpack-dashboard": "^0.4.0",
+    "webpack-dev-middleware": "^1.12.0",
+    "webpack-merge": "^4.1.0"
+  },
+  "dependencies": {
+    "babel-polyfill": "^6.23.0",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-router-dom": "^4.1.2"
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,json,scss}": [
+      "prettier --single-quote --write",
+      "git add"
+    ]
+  },
+  "scripts": {
+    "clean": "rimraf build/* dist/*",
+    "precommit": "lint-staged",
+    "prestart": "npm run clean",
+    "start": "node ./scripts/dev-server.js"
+  }
+}

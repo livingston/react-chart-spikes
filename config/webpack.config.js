@@ -2,6 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const autoprefixer = require('autoprefixer');
 
 const HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
   template: path.join(__dirname, '../src/index.html'),
@@ -29,6 +30,31 @@ const common = {
     rules: [
       { test: /\.jsx?$/, exclude: /node_modules/, loader: 'babel-loader' },
       { test: /\.html$/, loader: 'html-loader' },
+      {
+        test: /\.css$/,
+        use: [
+          { loader: 'style-loader' },
+          { loader: 'css-loader', options: { importLoaders: 1 } },
+          { loader: 'postcss-loader' },
+        ],
+      },
+      {
+        test: /\.scss$/,
+        include: [path.resolve(__dirname, '../src/styles')],
+        use: [
+          { loader: 'style-loader' },
+          { loader: 'css-loader' },
+          {
+            loader: 'postcss-loader',
+            options: {
+              plugins: [
+                autoprefixer({ browsers: ['last 2 versions'] })
+              ],
+            }
+          },
+          { loader: 'sass-loader', query: { outputStyle: 'expanded' } },
+        ],
+      },
     ]
   },
 

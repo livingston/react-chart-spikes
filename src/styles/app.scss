@@ -1,0 +1,82 @@
+@import '~normalize.css/normalize.css';
+
+html, body { height: 100%; }
+
+body {
+  overflow: hidden;
+  cursor: default;
+}
+
+#app, [data-reactroot] {
+  height: 100%;
+}
+
+main {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+a {
+  color: currentColor;
+  text-decoration: none;
+  cursor: pointer;
+  line-height: 50px;
+  display: inline-block;
+  padding: 0 20px;
+}
+
+a.active {
+  background: #fff;
+  color: #000;
+}
+
+
+nav {
+  flex: 0 0 50px;
+  background: #242424;
+  color: #fff;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+  }
+}
+
+article {
+  flex: 1;
+  display: flex;
+  padding: 15px;
+  box-sizing: border-box;
+
+  .page {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+  }
+}
+
+.chart {
+
+  &-wrapper {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+
+    .chart {
+      overflow: hidden;
+      flex: 1;
+    }
+  }
+
+  &-legend {
+    flex: 0 0 50px;
+  }
+}

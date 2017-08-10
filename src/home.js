@@ -30,8 +30,10 @@ class Home extends Component {
         </nav>
 
         <article>
-          <Route exact path="/" component={VictoryCharts}/>
-          <Route component={NotFound}/>
+          <Switch>
+            <Route exact path="/" component={VictoryCharts}/>
+            <Route component={NotFound}/>
+          </Switch>
         </article>
       </main>
     </Router>);

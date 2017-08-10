@@ -63,29 +63,30 @@ class Stack extends Component {
   render() {
     const { width, height } = this.state;
 
-    const categories = data.map(d => d.label);
+    const articles = Object.keys(data[0].articles);
+    const categories = {
+      x: data.map(d => d.label)
+    };
 
-    const transformedData = data.map((d) => transform(d.articles, (result, value, key) => {
-      result.push({
-        x: key,
-        y: value
-      });
-    }, []));
+    const transformedData = articles.map(article => data.map(d => ({
+      x: d.label,
+      y: d.articles[article],
+      label: `${d.label} - ${article} - ${d.articles[article]}`
+    })));
 
-    console.log(transformedData.length);
+    console.log(transformedData);
 
     return (<section className="chart-wrapper">
       <section className="chart-legend">
-        {/* <VictoryLegend
+        <h3>Stacked Bar Chart</h3>
+        <VictoryLegend
           width={width}
-          height={50}
-          data={[
-            {name: 'Competitor 1', symbol: { type: 'circle', fill: '#f00'} },
-            {name: 'Competitor 2', symbol: { type: 'circle', fill: '#00f'} }
-            ]}
+          theme={VictoryTheme.material}
+          data={articles.map(article => ({ name: article }))}
           orientation="horizontal"
+          padding={{ top: 50, left: 50 }}
           containerComponent={<VictoryContainer responsive={false} />}
-        /> */}
+        />
       </section>
       <section className="chart" ref={n => (this.node = n)}>
         <FlexibleWrapper onResize={this.updateDimensions}>
@@ -93,10 +94,15 @@ class Stack extends Component {
             width={width} height={height}
             theme={VictoryTheme.material}
             containerComponent={<VictoryContainer responsive={false}/>}
-            domainPadding={60}
+            domainPadding={{ x: 60 }}
           >
-            <VictoryStack categories={categories}>
-              {transformedData.map((d, i) => (<VictoryBar data={d} key={i} />))}
+            <VictoryStack
+              categories={categories}
+            >
+              {transformedData.map((d, i) => (<VictoryBar
+                data={d} key={i}
+                labelComponent={<VictoryTooltip renderInPortal/>}
+              />))}
             </VictoryStack>
           </VictoryChart>
         </FlexibleWrapper>

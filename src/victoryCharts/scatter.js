@@ -47,9 +47,11 @@ class Scatter extends Component {
 
     return (<section className="chart-wrapper">
       <section className="chart-legend">
+        <h3>Scatter Plot</h3>
         <VictoryLegend
           width={width}
-          height={50}
+          theme={VictoryTheme.material}
+          padding={{ top: 50, left: 50 }}
           data={[
             {name: 'Competitor 1', symbol: { type: 'circle', fill: '#f00'} },
             {name: 'Competitor 2', symbol: { type: 'circle', fill: '#00f'} }

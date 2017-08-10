@@ -13,7 +13,7 @@ const HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
 const common = {
   output: {
     path: path.join(__dirname, '../build/assets'),
-    filename: '[name].bundle.js',
+    filename: '[name]-[hash].bundle.js',
     publicPath: '/assets/',
   },
 

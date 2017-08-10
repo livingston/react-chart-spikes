@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
-import Scatter from './victoryCharts/scatter.js';
-import { VictoryLegend, VictoryContainer } from 'victory';
+import {
+  BrowserRouter as Router,
+  Route,
+  NavLink,
+  Switch
+} from 'react-router-dom';
+import VictoryCharts from './victoryCharts';
 
 class Home extends Component {
   constructor(props) {
@@ -9,11 +14,22 @@ class Home extends Component {
 
   render() {
 
-    return (<main>
-      <section className="chart-wrapper">
-        <Scatter />
-      </section>
-    </main>);
+    return (<Router>
+      <main>
+        <nav>
+          <ul>
+            <li><NavLink exact={true} to="/">Victory</NavLink></li>
+            <li><NavLink to="/rumble">Rumble</NavLink></li>
+          </ul>
+        </nav>
+
+        <article>
+          <Switch>
+            <Route exact path="/" component={VictoryCharts}/>
+          </Switch>
+        </article>
+      </main>
+    </Router>);
   }
 }
 

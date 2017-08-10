@@ -12,22 +12,9 @@ import './styles/app.scss';
 
 import Home from 'home';
 
-const NotFound = ({ location }) => (
-  <div>
-    <h3>404 – <code>{location.pathname}</code> Not Found!</h3>
-  </div>
-)
-
-const App = () => (
-  <Router>
-    <div>
-      <Switch>
-        <Route exact path="/" component={Home}/>
-        <Route component={NotFound}/>
-      </Switch>
-    </div>
-  </Router>
-);
+const App = () => (<Router>
+  <Home />
+</Router>);
 
 render(
   <App />,

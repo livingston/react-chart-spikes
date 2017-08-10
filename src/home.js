@@ -7,6 +7,12 @@ import {
 } from 'react-router-dom';
 import VictoryCharts from './victoryCharts';
 
+const NotFound = ({ location }) => (
+  <div>
+    <h3>404 – <code>{location.pathname}</code> Not Found!</h3>
+  </div>
+)
+
 class Home extends Component {
   constructor(props) {
     super(props);
@@ -24,9 +30,8 @@ class Home extends Component {
         </nav>
 
         <article>
-          <Switch>
-            <Route exact path="/" component={VictoryCharts}/>
-          </Switch>
+          <Route exact path="/" component={VictoryCharts}/>
+          <Route component={NotFound}/>
         </article>
       </main>
     </Router>);

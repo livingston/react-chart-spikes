@@ -2,7 +2,42 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>React Boilerplate</title>
+    <title>Victory</title>
+    <style>
+      html, body { height: 100%; }
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+
+      #app, [data-reactroot] {
+        height: 100%;
+      }
+
+      main {
+        height: 100%;
+        display: flex;
+        padding: 50px;
+        box-sizing: border-box;
+      }
+
+      .chart-wrapper {
+        flex: 1;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .chart-legend {
+        flex: 0 0 100px;
+      }
+
+      .chart-wrapper .chart {
+        overflow: hidden;
+        flex: 1;
+      }
+    </style>
   </head>
   <body>
     <div id="app"></div>

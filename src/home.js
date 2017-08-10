@@ -5,7 +5,9 @@ import {
   NavLink,
   Switch
 } from 'react-router-dom';
+
 import VictoryCharts from './victoryCharts';
+import RumbleCharts from './rumbleCharts';
 
 const NotFound = ({ location }) => (
   <div>
@@ -32,6 +34,7 @@ class Home extends Component {
         <article>
           <Switch>
             <Route exact path="/" component={VictoryCharts}/>
+            <Route path="/rumble" component={RumbleCharts}/>
             <Route component={NotFound}/>
           </Switch>
         </article>

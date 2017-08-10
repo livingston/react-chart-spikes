@@ -45,6 +45,7 @@
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-router-dom": "^4.1.2",
+    "rumble-charts": "^1.4.1",
     "victory": "^0.21.3"
   },
   "lint-staged": {
@@ -57,6 +58,8 @@
     "clean": "rimraf build/* dist/*",
     "precommit": "lint-staged",
     "prestart": "npm run clean",
-    "start": "node ./scripts/dev-server.js"
+    "start": "node ./scripts/dev-server.js",
+    "prebuild": "npm run clean",
+    "build": "webpack -p --config ./config/webpack.config.js"
   }
 }

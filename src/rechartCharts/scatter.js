@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { ScatterChart, Scatter, CartesianGrid, Tooltip, Legend,
- XAxis, YAxis, ZAxis, ReferenceLine, ReferenceDot, ReferenceArea, ErrorBar } from 'recharts';
-import { maxBy, minBy, groupBy } from 'lodash';
+import { ScatterChart, Scatter, CartesianGrid, Tooltip, Legend, XAxis, YAxis } from 'recharts';
+import { groupBy } from 'lodash';
 
 import FlexibleWrapper from '../ui/flexibleWrapper.js';
 
@@ -37,11 +36,6 @@ class RScatter extends Component {
 
   render() {
     const { width, height } = this.state;
-
-    const minX = minBy(data, (d) => d.x).x;
-    const maxX = maxBy(data, (d) => d.x).x;
-    const minY = minBy(data, (d) => d.y).y;
-    const maxY = maxBy(data, (d) => d.y).y;
 
     const groupedData = groupBy(data, 'competitor');
 

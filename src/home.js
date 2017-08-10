@@ -8,6 +8,7 @@ import {
 
 import VictoryCharts from './victoryCharts';
 import RumbleCharts from './rumbleCharts';
+import ReCharts from './rechartCharts';
 
 const NotFound = ({ location }) => (
   <div>
@@ -28,6 +29,7 @@ class Home extends Component {
           <ul>
             <li><NavLink exact={true} to="/">Victory</NavLink></li>
             <li><NavLink to="/rumble">Rumble</NavLink></li>
+            <li><NavLink to="/recharts">Recharts</NavLink></li>
           </ul>
         </nav>
 
@@ -35,6 +37,7 @@ class Home extends Component {
           <Switch>
             <Route exact path="/" component={VictoryCharts}/>
             <Route path="/rumble" component={RumbleCharts}/>
+            <Route path="/recharts" component={ReCharts}/>
             <Route component={NotFound}/>
           </Switch>
         </article>

@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-import { Chart, Layer, Dots, Ticks } from 'rumble-charts';
+import { ScatterChart, Scatter, CartesianGrid, Tooltip, Legend,
+ XAxis, YAxis, ZAxis, ReferenceLine, ReferenceDot, ReferenceArea, ErrorBar } from 'recharts';
+import { maxBy, minBy, groupBy } from 'lodash';
+
 import FlexibleWrapper from '../ui/flexibleWrapper.js';
 
 // Test data
@@ -12,7 +15,7 @@ const scatterDatum = () => ({
 });
 const data = Array.apply(null, Array(100)).map(scatterDatum);
 
-class Scatter extends Component {
+class RScatter extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -34,38 +37,33 @@ class Scatter extends Component {
 
   render() {
     const { width, height } = this.state;
-    console.log(this.state);
+
+    const minX = minBy(data, (d) => d.x).x;
+    const maxX = maxBy(data, (d) => d.x).x;
+    const minY = minBy(data, (d) => d.y).y;
+    const maxY = maxBy(data, (d) => d.y).y;
+
+    const groupedData = groupBy(data, 'competitor');
+
     return (<section className="chart-wrapper">
       <section className="chart-legend">
         <h3>Scatter Plot</h3>
       </section>
       <section className="chart" ref={n => (this.node = n)}>
         <FlexibleWrapper onResize={this.updateDimensions}>
-          <Chart width={width} height={height} series={[{ data }]} minY={0}>
-            <Layer width='85%' height='85%'>
-              <Ticks
-                axis='y'
-                ticks={{maxTicks: 10}}
-                lineLength='100%'
-                lineVisible={true}
-                lineVisible
-                labelStyle={{textAnchor:'end',dominantBaseline:'middle'}}
-                labelAttributes={{x: -20}}
-              />
-              <Ticks
-                ticks={{maxTicks: 10}}
-                lineLength='100%'
-                axis='x'
-                labelStyle={{textAnchor:'middle',dominantBaseline:'text-before-edge'}}
-                labelAttributes={{y: 30}}
-              />
-              <Dots circleRadius={5} dotStyle={({ point }) => ({ fill: (point.competitor === 'c1' ? '#f00' : '#00f') })} />
-            </Layer>
-          </Chart>
+          <ScatterChart width={width} height={height} margin={{top: 20, right: 20, bottom: 20, left: 20}}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis type="number" dataKey="x" tickCount={10} />
+            <YAxis dataKey="y" tickCount={10} />
+            <Scatter name='Competitor 1' data={groupedData.c1} fill='#f00' />
+            <Scatter name='Competitor 2' data={groupedData.c2} fill='#00f' />
+             <Tooltip cursor={{strokeDasharray: '3 3'}}/>
+             <Legend/>
+          </ScatterChart>
         </FlexibleWrapper>
       </section>
     </section>);
   }
 }
 
-export default Scatter;
+export default RScatter;

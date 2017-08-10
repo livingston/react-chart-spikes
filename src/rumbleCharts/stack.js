@@ -35,14 +35,6 @@ const data = [{
   }
 }];
 
-const series = [{
-    data: [1, 2, 3, 1]
-}, {
-    data: [5, 7, 11, 2]
-}, {
-    data: [13, 17, 19, 3]
-}];
-
 class Stack extends Component {
   constructor(props) {
     super(props);

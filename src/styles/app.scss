@@ -25,6 +25,10 @@ a {
   line-height: 50px;
   display: inline-block;
   padding: 0 20px;
+
+  &:hover {
+    background: rgba(#fff, .3);
+  }
 }
 
 a.active {

@@ -67,7 +67,7 @@ class RStack extends Component {
 
     return (<section className="chart-wrapper">
       <section className="chart-legend">
-        <h3>Scatter Plot</h3>
+        <h3>Stacked Bar Chart</h3>
       </section>
       <section className="chart" ref={n => (this.node = n)}>
         <FlexibleWrapper onResize={this.updateDimensions}>

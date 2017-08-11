@@ -40,6 +40,8 @@
   "dependencies": {
     "babel-polyfill": "^6.23.0",
     "chance": "^1.0.10",
+    "d3-axis": "^1.0.8",
+    "d3-scale": "^1.0.6",
     "lodash": "^4.17.4",
     "normalize.css": "^7.0.0",
     "react": "^15.6.1",

@@ -90,3 +90,44 @@ h3 {
   margin: 0;
   font-weight: normal;
 }
+
+.d3 {
+  .axis {
+    text {
+      fill: #000;
+    }
+    line {
+      stroke: #000;
+      stroke-width: 1;
+    }
+  }
+
+  .x-axis text {
+    text-anchor: middle;
+  }
+
+  .y-axis text {
+    text-anchor: end;
+  }
+
+  &-legend {
+    list-style: none;
+    display: flex;
+    justify-content: flex-end;
+    margin: 0;
+    padding: 0;
+
+    li {
+      padding: 0 10px 0 20px;
+      position: relative;
+
+      span {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-right: 10px;
+      }
+    }
+  }
+}

@@ -8,6 +8,8 @@ import FlexibleWrapper from '../ui/flexibleWrapper.js';
 // Test data
 require('chance');
 
+const competitors = { c1: "Competitor 1", c2: "Competitor 2" };
+
 const scatterDatum = () => ({
   x: chance.integer({min: 0, max: 1000}),
   y: chance.integer({min: 0, max: 1000}),
@@ -15,7 +17,7 @@ const scatterDatum = () => ({
 });
 const data = Array.apply(null, Array(100)).map(scatterDatum);
 
-const Dot = ({ point, xScale, yScale }) => (<circle
+const Dot = ({ point, xScale, yScale, onMouseOver, onMouseOut }) => (<circle onMouseOver={onMouseOver} onMouseOut={onMouseOut}
   cx={xScale(point.x)} cy={yScale(point.y)} r={5}
   fill={(point.competitor === 'c1' ? '#f00' : '#00f')}
 />);
@@ -41,7 +43,8 @@ class Scatter extends Component {
     super(props);
     this.state = {
       width: 100,
-      height: 100
+      height: 100,
+      currentPoint: null
     };
   }
 
@@ -56,8 +59,14 @@ class Scatter extends Component {
     });
   }
 
+  showPoint = (currentPoint) => {
+    this.setState({ currentPoint });
+  }
+
+  clearPoint = () => (this.setState({ currentPoint: null }))
+
   render() {
-    const { width, height } = this.state;
+    const { width, height, currentPoint } = this.state;
 
     const minX = minBy(data, (d) => d.x).x;
     const maxX = maxBy(data, (d) => d.x).x;
@@ -75,6 +84,13 @@ class Scatter extends Component {
     return (<section className="chart-wrapper">
       <section className="chart-legend">
         <h3>Scatter Plot</h3>
+        {currentPoint ?
+          <div className="currentPoint" style={{ backgroundColor: (currentPoint.competitor === 'c1' ? '#f00' : '#00f') }}>
+            <div>{competitors[currentPoint.competitor]}</div>
+            <div>x: {currentPoint.x}</div>
+            <div>y: {currentPoint.y}</div>
+          </div>
+        : null }
         <ul className="d3-legend">
           <li><span style={{ backgroundColor: "#f00" }} />Competitor 1</li>
           <li><span style={{ backgroundColor: "#00f" }} />Competitor 2</li>
@@ -84,7 +100,11 @@ class Scatter extends Component {
         <FlexibleWrapper onResize={this.updateDimensions}>
           <svg width={width} height={height}>
             <g className="dots">
-              {data.map((datum, i) => <Dot point={datum} xScale={xScale} yScale={yScale} key={i} />)}
+              {data.map((datum, i) => <Dot
+                point={datum} xScale={xScale} yScale={yScale} key={i}
+                onMouseOver={() => (this.showPoint(datum))}
+                onMouseOut={this.clearPoint}
+              />)}
             </g>
             <XAxis scale={xScale} top={height - axisHeight} left={padding} width={width - padding} />
             <YAxis scale={yScale} left={axisWidth} padding={padding} height={height - axisHeight - padding} />

@@ -130,4 +130,19 @@ h3 {
       }
     }
   }
+
+  .currentPoint {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    border: 4px solid darken(#1a3b7a, 10);
+    padding: 10px 20px;
+    font-size: 20px;
+    color: #fff;
+    background: #1a3b7a;
+
+    div:first-child {
+      text-align: center;
+    }
+  }
 }

@@ -62,7 +62,9 @@
     "precommit": "lint-staged",
     "prestart": "npm run clean",
     "start": "node ./scripts/dev-server.js",
+    "compress": "./scripts/compress.sh",
     "prebuild": "npm run clean",
-    "build": "webpack -p --config ./config/webpack.config.js"
+    "build": "webpack -p --config ./config/webpack.config.js",
+    "package": "cross-env NODE_ENV=production npm run build && npm run compress"
   }
 }

@@ -34,7 +34,7 @@ class Scatter extends Component {
 
   render() {
     const { width, height } = this.state;
-    console.log(this.state);
+
     return (<section className="chart-wrapper">
       <section className="chart-legend">
         <h3>Scatter Plot</h3>

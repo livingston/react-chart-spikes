@@ -74,8 +74,6 @@ class Stack extends Component {
       label: `${d.label} - ${article} - ${d.articles[article]}`
     })));
 
-    console.log(transformedData);
-
     return (<section className="chart-wrapper">
       <section className="chart-legend">
         <h3>Stacked Bar Chart</h3>

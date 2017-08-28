@@ -6,38 +6,58 @@ import FlexibleWrapper from '../ui/flexibleWrapper.js';
 // Test data
 require('chance');
 
-// Test data
-require('chance');
-
 const data = [{
+  label: 'Virtual Competitor',
+  cheap: chance.integer({min: 0, max: 1000}),
+  higher: chance.integer({min: 0, max: 1000}),
+  same: chance.integer({min: 0, max: 1000}),
+  nomatch: chance.integer({min: 0, max: 1000}),
+  promo: chance.integer({min: 0, max: 1000})
+},{
   label: 'Competitor 1',
-  articles: {
-    electronics: chance.integer({min: 0, max: 1000}),
-    food: chance.integer({min: 0, max: 1000}),
-    grocery: chance.integer({min: 0, max: 1000})
-  }
+  cheap: chance.integer({min: 0, max: 1000}),
+  higher: chance.integer({min: 0, max: 1000}),
+  same: chance.integer({min: 0, max: 1000}),
+  nomatch: chance.integer({min: 0, max: 1000}),
+  promo: chance.integer({min: 0, max: 1000})
 }, {
   label: 'Competitor 2',
-  articles: {
-    electronics: chance.integer({min: 0, max: 1000}),
-    food: chance.integer({min: 0, max: 1000}),
-    grocery: chance.integer({min: 0, max: 1000})
-  }
+  cheap: chance.integer({min: 0, max: 1000}),
+  higher: chance.integer({min: 0, max: 1000}),
+  same: chance.integer({min: 0, max: 1000}),
+  nomatch: chance.integer({min: 0, max: 1000}),
+  promo: chance.integer({min: 0, max: 1000})
 }, {
   label: 'Competitor 3',
-  articles: {
-    electronics: chance.integer({min: 0, max: 1000}),
-    food: chance.integer({min: 0, max: 1000}),
-    grocery: chance.integer({min: 0, max: 1000})
-  }
+  cheap: chance.integer({min: 0, max: 1000}),
+  higher: chance.integer({min: 0, max: 1000}),
+  same: chance.integer({min: 0, max: 1000}),
+  nomatch: chance.integer({min: 0, max: 1000}),
+  promo: chance.integer({min: 0, max: 1000})
 }, {
   label: 'Competitor 4',
-  articles: {
-    electronics: chance.integer({min: 0, max: 1000}),
-    food: chance.integer({min: 0, max: 1000}),
-    grocery: chance.integer({min: 0, max: 1000})
-  }
+  cheap: chance.integer({min: 0, max: 1000}),
+  higher: chance.integer({min: 0, max: 1000}),
+  same: chance.integer({min: 0, max: 1000}),
+  nomatch: chance.integer({min: 0, max: 1000}),
+  promo: chance.integer({min: 0, max: 1000})
 }];
+
+
+const RTip = ({ payload }) => {
+  if (payload.length) {
+    return (<div className="custom-tooltip">
+      <ul>
+        {payload.map(item => (<li key={item.name}>
+          <span className="key" style={{ color: item.color }}>{item.name}</span>
+          <span className="value">{item.value.toFixed(2)}%</span>
+          </li>))}
+      </ul>
+    </div>);
+  }
+
+  return null;
+};
 
 
 class RStack extends Component {
@@ -63,7 +83,25 @@ class RStack extends Component {
   render() {
     const { width, height } = this.state;
 
-    const articles = Object.keys(data[0].articles).map(article => ({ label: article, key: `articles.${article}`, color: chance.color({format: 'hex'}) }));
+    const articles = Object.keys(data[0]).map(article => ({ label: article, key: article, color: chance.color({format: 'hex'}) }));
+    articles.shift();
+
+    const finalData = data.map((d) => {
+      const values = Object.values(d);
+      values.shift();
+      const total = values.reduce((sum, v) => (sum + v), 0);
+
+      const o = {
+        label: d.label,
+        original: d
+      };
+
+      values.forEach((v, i) => {
+        return  o[articles[i].key] = (v / total) * 100;
+      });
+
+      return o;
+    });
 
     return (<section className="chart-wrapper">
       <section className="chart-legend">
@@ -71,14 +109,16 @@ class RStack extends Component {
       </section>
       <section className="chart" ref={n => (this.node = n)}>
         <FlexibleWrapper onResize={this.updateDimensions}>
-          <BarChart width={width} height={height} data={data} margin={{top: 20, right: 30, left: 20, bottom: 5}}>
+          <BarChart width={width} height={height} data={finalData} labelKey="label" margin={{top: 20, right: 30, left: 20, bottom: 5}}>
             <XAxis dataKey="name"/>
             <YAxis/>
             <CartesianGrid strokeDasharray="3 3"/>
-            <Tooltip/>
+            <Tooltip content={<RTip />}/>
             <Legend />
 
-            {articles.map((article, i) => (<Bar dataKey={article.key} name={article.label} stackId="a" key={i} fill={article.color} />))}
+            {articles.map((article, i) => (
+              <Bar dataKey={article.key} name={article.label} stackId="a" key={i} fill={article.color} />
+            ))}
           </BarChart>
         </FlexibleWrapper>
       </section>

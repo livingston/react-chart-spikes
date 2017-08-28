@@ -146,3 +146,46 @@ h3 {
     }
   }
 }
+
+
+.recharts-tooltip-cursor {
+  fill: none;
+}
+
+.custom-tooltip {
+  padding: 10px 15px;
+  border-radius: 5px;
+  background: rgba(#fff, .8);
+
+  &::before {
+    // content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(#fff, .5);
+    z-index: -1;
+    border-radius: 5px;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .key {
+    display: inline-block;
+    width: 100px;
+    padding-right: 15px;
+    // text-align: right;
+    font-weight: bold;
+  }
+
+  .value {
+    text-align: right;
+    display: inline-block;
+    width: 50px;
+  }
+}

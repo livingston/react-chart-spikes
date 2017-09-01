@@ -50,11 +50,11 @@ const DISTRIBUTION_GROUPS = {
 const GROUPINGS_PRE = Object.keys(DISTRIBUTION_GROUPS).map((group, i) => ({ label: group, key: `price_distribution.pre.${group}.percentage`, color: DISTRIBUTION_GROUPS[group].color.pre }));
 const GROUPINGS_POST = Object.keys(DISTRIBUTION_GROUPS).map((group, i) => ({ label: group, key: `price_distribution.post.${group}.percentage`, color: DISTRIBUTION_GROUPS[group].color.post }));
 
-const TooltipContent = ({ data, activeType }) => {
+const TooltipContent = ({ data, activeType, activeSegment }) => {
   const tooltipData = get(data, `price_distribution.${activeType}`);
 
   return (<ul className="group-info">
-    <li>{data.name} — {activeType}</li>
+    <li>{data.name} — {activeType} - {activeSegment}</li>
     {Object.keys(tooltipData).reverse().map((key) => (<li key={key}>
       <span className="group-color" style={{ backgroundColor: DISTRIBUTION_GROUPS[key].color[activeType] }} />
       <span className="group-label">{DISTRIBUTION_GROUPS[key].label}</span>
@@ -73,6 +73,7 @@ class Chart extends Component {
 
     activeBar: null,
     activeType: null,
+    activeSegment: null,
 
     formattedData: [],
   }
@@ -106,8 +107,24 @@ class Chart extends Component {
       return d;
     });
 
+    const dataStack = stack();
+
+    dataStack.keys(GROUPINGS_PRE.map(g => g.key));
+    dataStack.value((d, key) => get(d, key));
+
+    console.log(dataStack(formattedData));
+
     this.setState({ formattedData });
   }
+
+  getSegmentCallback = (key) => {
+    const segmentKey = key.split('.')[2];
+
+    return () => this.setState({
+      activeSegment: segmentKey
+    });
+  }
+
 
   setTooltipCallback(barType) {
     return (data) => {
@@ -121,12 +138,13 @@ class Chart extends Component {
   clearTooltipState = () => {
     this.setState({
       activeBar: null,
-      activeType: null
+      activeType: null,
+      activeSegment: null
     })
   }
 
   renderTooltip = (...all) => {
-    const { formattedData, activeBar, activeType } = this.state;
+    const { formattedData, activeBar, activeType, activeSegment } = this.state;
     const currentCompetitor = find(formattedData, ["name", activeBar]);
     const hasPostData = !get(currentCompetitor, 'price_distribution.post.nodata');
 
@@ -138,7 +156,7 @@ class Chart extends Component {
       {hasNoData ?
         <AwaitingData />
       :
-        <TooltipContent data={currentCompetitor} activeType={activeType} />
+        <TooltipContent data={currentCompetitor} activeType={activeType} activeSegment={activeSegment} />
       }
     </div>);
   }
@@ -160,7 +178,6 @@ class Chart extends Component {
         <YAxis tickLine={false} tickFormatter={t => (t && `${t}%`)} domain={[0, 100]} />
         <CartesianGrid vertical={false} />
 
-        {/* {this.state.activeBar ? <Tooltip cursor={false} content={this.renderTooltip} /> : null } */}
         <Tooltip cursor={false} content={this.renderTooltip} />
 
         {GROUPINGS_PRE.map((group, i) => (
@@ -170,6 +187,7 @@ class Chart extends Component {
             fill={group.color}
             onMouseEnter={this.setTooltipCallback('pre')}
             onMouseLeave={this.clearTooltipState}
+            shape={<Rectangle onMouseEnter={this.getSegmentCallback(group.key)} />}
           />
         ))}
 
@@ -179,7 +197,7 @@ class Chart extends Component {
             stackId="post" key={`post-${i}`}
             fill={group.color}
             onMouseEnter={this.setTooltipCallback('post')}
-            onMouseLeave={this.clearTooltipState}
+            shape={<Rectangle onMouseEnter={this.getSegmentCallback(group.key)} />}
           />
         ))}
       </BarChart>

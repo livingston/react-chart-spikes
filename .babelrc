@@ -9,5 +9,11 @@
     }],
     "react"
   ],
-  "plugins": ["transform-react-jsx", "babel-plugin-transform-class-properties", "transform-object-rest-spread", "recharts"]
+  "plugins": [
+    "transform-decorators-legacy",
+    "transform-react-jsx",
+    "babel-plugin-transform-class-properties",
+    "transform-object-rest-spread",
+    "recharts"
+  ]
 }

@@ -29,7 +29,7 @@ class Home extends Component {
       <main>
         <nav>
           <ul>
-            <li><NavLink exact={true} to="/">Dash</NavLink></li>
+            <li><NavLink exact={true} to="/">Dashboard</NavLink></li>
             <li><NavLink to="/recharts">Recharts</NavLink></li>
             <li><NavLink to="/victory">Victory</NavLink></li>
             {/* <li><NavLink to="/rumble">Rumble</NavLink></li> */}

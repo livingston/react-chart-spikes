@@ -54,13 +54,18 @@ const TooltipContent = ({ data, activeType, activeSegment }) => {
   const tooltipData = get(data, `price_distribution.${activeType}`);
 
   return (<ul className="group-info">
-    <li>{data.name} — {activeType} - {activeSegment}</li>
-    {Object.keys(tooltipData).reverse().map((key) => (<li key={key}>
-      <span className="group-color" style={{ backgroundColor: DISTRIBUTION_GROUPS[key].color[activeType] }} />
-      <span className="group-label">{DISTRIBUTION_GROUPS[key].label}</span>
-      <span className="group-percent">{tooltipData[key].percentage}%</span>
-      <span className="group-count">{tooltipData[key].number_of_articles/1000}k</span>
-    </li>))}
+    <li>{data.name} — {activeType}</li>
+    {/* - {activeSegment} */}
+    {Object.keys(tooltipData).reverse().map((key) => {
+      const currentItemInfo = DISTRIBUTION_GROUPS[key];
+
+      return (<li key={key} className={(key === activeSegment) ? "group-current": ""}>
+        <span className="group-color" style={{ backgroundColor: currentItemInfo.color[activeType] }} />
+        <span className="group-label">{currentItemInfo.label}</span>
+        <span className="group-percent">{tooltipData[key].percentage}%</span>
+        <span className="group-count">{tooltipData[key].number_of_articles/1000}k</span>
+      </li>);
+    })}
   </ul>);
 };
 
@@ -109,6 +114,9 @@ class Chart extends Component {
 
     this.setState({ formattedData });
   }
+
+  highlightSegment = (data, index, { target }) => (target.setAttribute('stroke', '#f00'))
+  clearHighlight = (data, index, { target }) => (target.setAttribute('stroke', null))
 
   getSegmentCallback = (key) => {
     const segmentKey = key.split('.')[2];
@@ -180,6 +188,8 @@ class Chart extends Component {
             fill={group.color}
             onMouseEnter={this.setTooltipCallback('pre')}
             onMouseLeave={this.clearTooltipState}
+            onMouseOver={this.highlightSegment}
+            onMouseOut={this.clearHighlight}
             shape={<Rectangle onMouseEnter={this.getSegmentCallback(group.key)} />}
           />
         ))}
@@ -190,6 +200,8 @@ class Chart extends Component {
             stackId="post" key={`post-${i}`}
             fill={group.color}
             onMouseEnter={this.setTooltipCallback('post')}
+            onMouseOver={this.highlightSegment}
+            onMouseOut={this.clearHighlight}
             shape={<Rectangle onMouseEnter={this.getSegmentCallback(group.key)} />}
           />
         ))}

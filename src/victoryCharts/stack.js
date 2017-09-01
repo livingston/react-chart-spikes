@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { VictoryChart, VictoryAxis, VictoryTheme,
   VictoryContainer, VictoryTooltip, VictoryLegend,
-  VictoryStack, VictoryBar } from 'victory';
+  VictoryStack, VictoryBar, VictoryGroup } from 'victory';
 import { maxBy, minBy, transform } from 'lodash';
 
 import FlexibleWrapper from '../ui/flexibleWrapper.js';
@@ -94,14 +94,24 @@ class Stack extends Component {
             containerComponent={<VictoryContainer responsive={false}/>}
             domainPadding={{ x: 60 }}
           >
-            <VictoryStack
-              categories={categories}
-            >
-              {transformedData.map((d, i) => (<VictoryBar
-                data={d} key={i}
-                labelComponent={<VictoryTooltip renderInPortal/>}
-              />))}
-            </VictoryStack>
+            <VictoryGroup offset={0} style={{ data: { width: 30 } }}>
+              <VictoryStack
+                categories={categories}
+              >
+                {transformedData.map((d, i) => (<VictoryBar
+                  data={d} key={i}
+                  labelComponent={<VictoryTooltip renderInPortal/>}
+                />))}
+              </VictoryStack>
+              <VictoryStack
+                categories={categories}
+              >
+                {transformedData.map((d, i) => (<VictoryBar
+                  data={d} key={i}
+                  labelComponent={<VictoryTooltip renderInPortal/>}
+                />))}
+              </VictoryStack>
+            </VictoryGroup>
           </VictoryChart>
         </FlexibleWrapper>
       </section>

@@ -148,9 +148,9 @@ h3 {
 }
 
 
-.recharts-tooltip-cursor {
-  fill: none;
-}
+// .recharts-tooltip-cursor {
+//   fill: none;
+// }
 
 .custom-tooltip {
   padding: 10px 15px;
@@ -189,3 +189,83 @@ h3 {
     width: 50px;
   }
 }
+
+.rechart {
+  .legend {
+    list-style: none;
+    display: flex;
+
+    li {
+      padding: 0 10px 0 0;
+      line-height:18px;
+      text-transform: capitalize;
+    }
+
+    span {
+      display: inline-block;
+      width: 15px;
+      height: 15px;
+      margin: 0 5px 0 0;
+      position: relative;
+      top: 2px;
+    }
+  }
+}
+.custom-tooltip {
+  height: 500px;
+}
+
+
+.f {
+  &-bar {
+    .recharts-bar-rectangle {
+      cursor: pointer;
+    }
+  }
+  &-tooltip {
+    border: 1px solid rgba(#000, .7);
+    border-radius: 3px;
+    background: #F4F4F4;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.17);
+    padding: 15px;
+    box-sizing: border-box;
+    width: 195px;
+    display: flex;
+
+    &:not(.nodata) {
+      height: 192px;
+    }
+
+    font-size: 14px;
+    color: #444;
+  }
+
+  .group {
+    &-info {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+
+      li {
+        display: flex;
+        align-items: center;
+        flex: 1;
+
+        & > *:not(:last-child) {
+          margin-right: 15px;
+        }
+      }
+    }
+
+    &-color {
+      height: 8px;
+      flex: 0 0 8px;
+      border-radius: 50%;
+      margin-right: 5px;
+    }
+  }
+}
+

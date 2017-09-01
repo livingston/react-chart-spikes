@@ -24,7 +24,7 @@ const Dot = ({ point, xScale, yScale, onMouseOver, onMouseOut }) => (<circle onM
 
 const XAxis = ({ scale, top, width, left }) => (<g className="axis x-axis" transform={`translate(0, ${top})`}>
   <line x1={left} x2={width} y1={0} y2={0} />
-  {scale.ticks().map(tick => (<g transform={`translate(${scale(tick)}, 0)`}>
+  {scale.ticks().map(tick => (<g transform={`translate(${scale(tick)}, 0)`} key={tick}>
     <line x1={0} x2={0} y1={0} y2={5} />
     <text x={0} y={20} dy=".3em" key={tick}>{tick}</text>
   </g>))}
@@ -32,7 +32,7 @@ const XAxis = ({ scale, top, width, left }) => (<g className="axis x-axis" trans
 
 const YAxis = ({ scale, padding, height, left }) => (<g className="axis y-axis" transform={`translate(0, ${padding})`}>
   <line x1={left} x2={left} y1={padding} y2={height} />
-  {scale.ticks().map(tick => (<g transform={`translate(0, ${scale(tick)})`}>
+  {scale.ticks().map(tick => (<g transform={`translate(0, ${scale(tick)})`} key={tick}>
     <line x1={left - 5} x2={left} y1={0} y2={0} />
     <text x={left - 10} y={0} dy=".3em" key={tick}>{tick}</text>
   </g>))}

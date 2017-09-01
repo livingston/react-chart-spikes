@@ -1,0 +1,190 @@
+import React, { Component } from 'react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Cell, Rectangle } from 'recharts';
+import { get, set, find, cloneDeep } from 'lodash';
+
+const DISTRIBUTION_GROUPS = {
+  "metro_is_lower": {
+    label: "Cheaper",
+    color: {
+      pre: "#cfeba0",
+      post: "#acd666"
+    }
+  },
+  "metro_is_same": {
+    label: "Same",
+    color: {
+      pre: "#a5dafd",
+      post: "#66c2ff"
+    }
+  },
+  "metro_is_higher": {
+    label: "Higher",
+    color: {
+      pre: "#ff8656",
+      post: "#ff5916"
+    }
+  },
+  "nomatch": {
+    label: "Not Matched",
+    color: {
+      pre: "#a4bbea",
+      post: "#7d92bc"
+    }
+  },
+  "promo": {
+    label: "Comp. Promo",
+    color: {
+      pre: "#ece1bf",
+      post: "#bcad7d"
+    }
+  },
+  "nodata": {
+    label: "NO DATA",
+    color: {
+      pre: "#f2f2f2",
+      post: "#f2f2f2"
+    }
+  }
+};
+
+const GROUPINGS_PRE = Object.keys(DISTRIBUTION_GROUPS).map((group, i) => ({ label: group, key: `price_distribution.pre.${group}.percentage`, color: DISTRIBUTION_GROUPS[group].color.pre }));
+const GROUPINGS_POST = Object.keys(DISTRIBUTION_GROUPS).map((group, i) => ({ label: group, key: `price_distribution.post.${group}.percentage`, color: DISTRIBUTION_GROUPS[group].color.post }));
+
+const TooltipContent = ({ data, activeType }) => {
+  const tooltipData = get(data, `price_distribution.${activeType}`);
+
+  return (<ul className="group-info">
+    <li>{data.name} — {activeType}</li>
+    {Object.keys(tooltipData).reverse().map((key) => (<li key={key}>
+      <span className="group-color" style={{ backgroundColor: DISTRIBUTION_GROUPS[key].color[activeType] }} />
+      <span className="group-label">{DISTRIBUTION_GROUPS[key].label}</span>
+      <span className="group-percent">{tooltipData[key].percentage}%</span>
+      <span className="group-count">{tooltipData[key].number_of_articles/1000}k</span>
+    </li>))}
+  </ul>);
+};
+
+const AwaitingData = () => (<div>Awaiting Data</div>);
+
+class Chart extends Component {
+  state = {
+    width: 500,
+    height: 222,
+
+    activeBar: null,
+    activeType: null,
+
+    formattedData: [],
+  }
+
+  componentDidMount() {
+    const { data } = this.props;
+
+    this.formatData(data);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { data } = nextProps;
+
+    this.formatData(data);
+  }
+
+  formatData(data) {
+    const formattedData = data.map((d) => {
+      const preData = get(d, 'price_distribution.post');
+      if (!Object.keys(preData).length) {
+        const transformedData = cloneDeep(d);
+        set(transformedData, 'price_distribution.post', {
+          nodata: {
+            percentage: 100
+          }
+        });
+
+        return transformedData;
+      }
+
+      return d;
+    });
+
+    this.setState({ formattedData });
+  }
+
+  setTooltipCallback(barType) {
+    return (data) => {
+      this.setState({
+        activeBar: data.name,
+        activeType: barType
+      });
+    }
+  }
+
+  clearTooltipState = () => {
+    this.setState({
+      activeBar: null,
+      activeType: null
+    })
+  }
+
+  renderTooltip = (...all) => {
+    const { formattedData, activeBar, activeType } = this.state;
+    const currentCompetitor = find(formattedData, ["name", activeBar]);
+    const hasPostData = !get(currentCompetitor, 'price_distribution.post.nodata');
+
+    const hasNoData = (!hasPostData && activeType === "post");
+
+    if (!currentCompetitor) return;
+
+    return (<div className={`f-tooltip ${hasNoData ? 'nodata' : ''}`}>
+      {hasNoData ?
+        <AwaitingData />
+      :
+        <TooltipContent data={currentCompetitor} activeType={activeType} />
+      }
+    </div>);
+  }
+
+  render() {
+    const { width, height, formattedData } = this.state;
+
+    return (<section className="f-bar chart-wrapper">
+      <BarChart
+        width={width}
+        height={height}
+        data={formattedData}
+        labelKey="name"
+        margin={{top: 0, right: 0, left: 0, bottom: 0}}
+        barGap={2}
+        barSize={30}
+      >
+        <XAxis dataKey="name" tickCount={formattedData.length} tickLine={false} />
+        <YAxis tickLine={false} tickFormatter={t => (t && `${t}%`)} domain={[0, 100]} />
+        <CartesianGrid vertical={false} />
+
+        {/* {this.state.activeBar ? <Tooltip cursor={false} content={this.renderTooltip} /> : null } */}
+        <Tooltip cursor={false} content={this.renderTooltip} />
+
+        {GROUPINGS_PRE.map((group, i) => (
+          <Bar
+            dataKey={group.key} name={group.label}
+            stackId="pre" key={`pre-${i}`}
+            fill={group.color}
+            onMouseEnter={this.setTooltipCallback('pre')}
+            onMouseLeave={this.clearTooltipState}
+          />
+        ))}
+
+        {GROUPINGS_POST.map((group, i) => (
+          <Bar
+            dataKey={group.key} name={group.label}
+            stackId="post" key={`post-${i}`}
+            fill={group.color}
+            onMouseEnter={this.setTooltipCallback('post')}
+            onMouseLeave={this.clearTooltipState}
+          />
+        ))}
+      </BarChart>
+    </section>);
+  }
+}
+
+export default Chart;

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Chart from './chart';
+import PriceDistributionChart from './priceDistributionChart';
 
 const apiData =[{
   "name": "Virtual Comp.",
@@ -207,7 +207,7 @@ const apiData =[{
 }];
 
 const Final = () => (<section className="f page">
-  <Chart data={apiData}/>
+  <PriceDistributionChart data={apiData}/>
 </section>);
 
 export default Final;

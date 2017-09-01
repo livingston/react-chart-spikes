@@ -71,7 +71,7 @@ const TooltipContent = ({ data, activeType, activeSegment }) => {
 
 const AwaitingData = () => (<div>Awaiting Data</div>);
 
-class Chart extends Component {
+class PriceDistributionChart extends Component {
   state = {
     width: 500,
     height: 222,
@@ -212,4 +212,4 @@ class Chart extends Component {
   }
 }
 
-export default Chart;
+export default PriceDistributionChart;

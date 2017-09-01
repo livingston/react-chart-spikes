@@ -115,7 +115,7 @@ class Chart extends Component {
     this.setState({ formattedData });
   }
 
-  highlightSegment = (data, index, { target }) => (target.setAttribute('stroke', '#f00'))
+  highlightSegment = (data, index, { target }) => (target.setAttribute('stroke', '#000'))
   clearHighlight = (data, index, { target }) => (target.setAttribute('stroke', null))
 
   getSegmentCallback = (key) => {
@@ -128,7 +128,8 @@ class Chart extends Component {
 
 
   setTooltipCallback(barType) {
-    return (data) => {
+    return (data, index, { clientX, clientY }) => {
+      console.log('TC', clientX < data.x);
       this.setState({
         activeBar: data.name,
         activeType: barType
@@ -175,11 +176,11 @@ class Chart extends Component {
         barGap={2}
         barSize={30}
       >
-        <XAxis dataKey="name" tickCount={formattedData.length} tickLine={false} />
+        <XAxis dataKey="name" tickCount={formattedData.length} tickLine={false} interval={0} />
         <YAxis tickLine={false} tickFormatter={t => (t && `${t}%`)} domain={[0, 100]} />
         <CartesianGrid vertical={false} />
 
-        <Tooltip cursor={false} content={this.renderTooltip} />
+        <Tooltip cursor={false} content={this.renderTooltip} offset={32} />
 
         {GROUPINGS_PRE.map((group, i) => (
           <Bar
@@ -200,6 +201,7 @@ class Chart extends Component {
             stackId="post" key={`post-${i}`}
             fill={group.color}
             onMouseEnter={this.setTooltipCallback('post')}
+            onMouseLeave={this.clearTooltipState}
             onMouseOver={this.highlightSegment}
             onMouseOut={this.clearHighlight}
             shape={<Rectangle onMouseEnter={this.getSegmentCallback(group.key)} />}

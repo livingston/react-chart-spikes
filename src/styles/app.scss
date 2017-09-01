@@ -6,6 +6,7 @@ body {
   overflow: hidden;
   cursor: default;
   font-family: 'Roboto', sans-serif;
+  font-size: 14px;
 }
 
 #app, [data-reactroot] {
@@ -236,7 +237,7 @@ h3 {
       height: 192px;
     }
 
-    font-size: 14px;
+    font-size: 10px;
     color: #444;
   }
 
@@ -257,7 +258,19 @@ h3 {
         & > *:not(:last-child) {
           margin-right: 15px;
         }
+
+        &:first-child {
+          text-align: center;
+        }
       }
+    }
+
+    &-label {
+      flex: 1
+    }
+
+    &-percent {
+      flex: 0 0 25px;
     }
 
     &-color {
@@ -268,8 +281,14 @@ h3 {
     }
 
     &-current {
-      color: #f00;
+      // color: #f00;
+      // font-weight: bold;
+      text-shadow: 0 0 1px #000;
     }
+  }
+
+  .recharts-cartesian-axis-tick {
+    font-size: 10px;
   }
 }
 

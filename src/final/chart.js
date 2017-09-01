@@ -107,13 +107,6 @@ class Chart extends Component {
       return d;
     });
 
-    const dataStack = stack();
-
-    dataStack.keys(GROUPINGS_PRE.map(g => g.key));
-    dataStack.value((d, key) => get(d, key));
-
-    console.log(dataStack(formattedData));
-
     this.setState({ formattedData });
   }
 

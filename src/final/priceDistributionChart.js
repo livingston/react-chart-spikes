@@ -1,6 +1,211 @@
 import React, { Component } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Cell, Rectangle } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Cell, Rectangle, ResponsiveContainer } from 'recharts';
 import { get, set, find, cloneDeep } from 'lodash';
+
+const apiData =[{
+  "name": "Virtual Comp.",
+  "pi": 0,
+  "price_distribution": {
+    "pre": {
+      "metro_is_lower": {
+        "number_of_articles": 20000,
+        "percentage": 20
+      },
+      "metro_is_same": {
+        "number_of_articles": 35000,
+        "percentage": 35
+      },
+      "metro_is_higher": {
+        "number_of_articles": 10000,
+        "percentage": 10
+      },
+      "nomatch": {
+        "number_of_articles": 20000,
+        "percentage": 20
+      },
+      "promo": {
+        "number_of_articles": 25000,
+        "percentage": 15
+      }
+    },
+    "post": {}
+  }
+}, {
+  "name": "Competitor 1",
+  "pi": 0,
+  "price_distribution": {
+    "pre": {
+      "metro_is_lower": {
+        "number_of_articles": 30000,
+        "percentage": 30
+      },
+      "metro_is_same": {
+        "number_of_articles": 35000,
+        "percentage": 25
+      },
+      "metro_is_higher": {
+        "number_of_articles": 20000,
+        "percentage": 20
+      },
+      "nomatch": {
+        "number_of_articles": 10000,
+        "percentage": 10
+      },
+      "promo": {
+        "number_of_articles": 15000,
+        "percentage": 15
+      }
+    },
+    "post": {}
+  }
+},{
+  "name": "Competitor 2",
+  "pi": 0,
+  "price_distribution": {
+    "pre": {
+      "metro_is_lower": {
+        "number_of_articles": 30000,
+        "percentage": 30
+      },
+      "metro_is_same": {
+        "number_of_articles": 35000,
+        "percentage": 15
+      },
+      "metro_is_higher": {
+        "number_of_articles": 20000,
+        "percentage": 10
+      },
+      "nomatch": {
+        "number_of_articles": 10000,
+        "percentage": 5
+      },
+      "promo": {
+        "number_of_articles": 15000,
+        "percentage": 40
+      }
+    },
+    "post": {
+      "metro_is_lower": {
+        "number_of_articles": 30000,
+        "percentage": 20
+      },
+      "metro_is_same": {
+        "number_of_articles": 35000,
+        "percentage": 20
+      },
+      "metro_is_higher": {
+        "number_of_articles": 20000,
+        "percentage": 20
+      },
+      "nomatch": {
+        "number_of_articles": 10000,
+        "percentage": 20
+      },
+      "promo": {
+        "number_of_articles": 15000,
+        "percentage": 20
+      }
+    }
+  }
+}, {
+  "name": "Competitor 3",
+  "pi": 0,
+  "price_distribution": {
+    "pre": {
+      "metro_is_lower": {
+        "number_of_articles": 30000,
+        "percentage": 30
+      },
+      "metro_is_same": {
+        "number_of_articles": 35000,
+        "percentage": 15
+      },
+      "metro_is_higher": {
+        "number_of_articles": 20000,
+        "percentage": 10
+      },
+      "nomatch": {
+        "number_of_articles": 10000,
+        "percentage": 5
+      },
+      "promo": {
+        "number_of_articles": 15000,
+        "percentage": 40
+      }
+    },
+    "post": {
+      "metro_is_lower": {
+        "number_of_articles": 30000,
+        "percentage": 20
+      },
+      "metro_is_same": {
+        "number_of_articles": 35000,
+        "percentage": 20
+      },
+      "metro_is_higher": {
+        "number_of_articles": 20000,
+        "percentage": 20
+      },
+      "nomatch": {
+        "number_of_articles": 10000,
+        "percentage": 20
+      },
+      "promo": {
+        "number_of_articles": 15000,
+        "percentage": 20
+      }
+    }
+  }
+}, {
+  "name": "Competitor 4",
+  "pi": 0,
+  "price_distribution": {
+    "pre": {
+      "metro_is_lower": {
+        "number_of_articles": 30000,
+        "percentage": 30
+      },
+      "metro_is_same": {
+        "number_of_articles": 35000,
+        "percentage": 15
+      },
+      "metro_is_higher": {
+        "number_of_articles": 20000,
+        "percentage": 10
+      },
+      "nomatch": {
+        "number_of_articles": 10000,
+        "percentage": 5
+      },
+      "promo": {
+        "number_of_articles": 15000,
+        "percentage": 40
+      }
+    },
+    "post": {
+      "metro_is_lower": {
+        "number_of_articles": 30000,
+        "percentage": 20
+      },
+      "metro_is_same": {
+        "number_of_articles": 35000,
+        "percentage": 20
+      },
+      "metro_is_higher": {
+        "number_of_articles": 20000,
+        "percentage": 20
+      },
+      "nomatch": {
+        "number_of_articles": 10000,
+        "percentage": 20
+      },
+      "promo": {
+        "number_of_articles": 15000,
+        "percentage": 20
+      }
+    }
+  }
+}];
 
 const DISTRIBUTION_GROUPS = {
   "metro_is_lower": {
@@ -74,7 +279,7 @@ const AwaitingData = () => (<div>Awaiting Data</div>);
 class PriceDistributionChart extends Component {
   state = {
     width: 500,
-    height: 222,
+    height: 400,
 
     activeBar: null,
     activeType: null,
@@ -84,18 +289,11 @@ class PriceDistributionChart extends Component {
   }
 
   componentDidMount() {
-    const { data } = this.props;
-
-    this.formatData(data);
+    this.formatData();
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { data } = nextProps;
-
-    this.formatData(data);
-  }
-
-  formatData(data) {
+  formatData() {
+    const data = apiData;
     const formattedData = data.map((d) => {
       const preData = get(d, 'price_distribution.post');
       if (!Object.keys(preData).length) {
@@ -167,47 +365,47 @@ class PriceDistributionChart extends Component {
     const { width, height, formattedData } = this.state;
 
     return (<section className="f-bar chart-wrapper">
-      <BarChart
-        width={width}
-        height={height}
-        data={formattedData}
-        labelKey="name"
-        margin={{top: 0, right: 0, left: 0, bottom: 0}}
-        barGap={2}
-        barSize={30}
-      >
-        <XAxis dataKey="name" tickCount={formattedData.length} tickLine={false} interval={0} />
-        <YAxis tickLine={false} tickFormatter={t => (t && `${t}%`)} domain={[0, 100]} />
-        <CartesianGrid vertical={false} />
+      <ResponsiveContainer width="100%" height={height}>
+        <BarChart
+          data={formattedData}
+          labelKey="name"
+          margin={{top: 0, right: 0, left: 0, bottom: 0}}
+          barGap={2}
+          barSize={30}
+        >
+          <XAxis dataKey="name" tickCount={formattedData.length} tickLine={false} interval={0} />
+          <YAxis tickLine={false} tickFormatter={t => (t && `${t}%`)} domain={[0, 100]} />
+          <CartesianGrid vertical={false} />
 
-        <Tooltip cursor={false} content={this.renderTooltip} offset={32} />
+          <Tooltip cursor={false} content={this.renderTooltip} offset={32} />
 
-        {GROUPINGS_PRE.map((group, i) => (
-          <Bar
-            dataKey={group.key} name={group.label}
-            stackId="pre" key={`pre-${i}`}
-            fill={group.color}
-            onMouseEnter={this.setTooltipCallback('pre')}
-            onMouseLeave={this.clearTooltipState}
-            onMouseOver={this.highlightSegment}
-            onMouseOut={this.clearHighlight}
-            shape={<Rectangle onMouseEnter={this.getSegmentCallback(group.key)} />}
-          />
-        ))}
+          {GROUPINGS_PRE.map((group, i) => (
+            <Bar
+              dataKey={group.key} name={group.label}
+              stackId="pre" key={`pre-${i}`}
+              fill={group.color}
+              onMouseEnter={this.setTooltipCallback('pre')}
+              onMouseLeave={this.clearTooltipState}
+              onMouseOver={this.highlightSegment}
+              onMouseOut={this.clearHighlight}
+              shape={<Rectangle onMouseEnter={this.getSegmentCallback(group.key)} />}
+            />
+          ))}
 
-        {GROUPINGS_POST.map((group, i) => (
-          <Bar
-            dataKey={group.key} name={group.label}
-            stackId="post" key={`post-${i}`}
-            fill={group.color}
-            onMouseEnter={this.setTooltipCallback('post')}
-            onMouseLeave={this.clearTooltipState}
-            onMouseOver={this.highlightSegment}
-            onMouseOut={this.clearHighlight}
-            shape={<Rectangle onMouseEnter={this.getSegmentCallback(group.key)} />}
-          />
-        ))}
-      </BarChart>
+          {GROUPINGS_POST.map((group, i) => (
+            <Bar
+              dataKey={group.key} name={group.label}
+              stackId="post" key={`post-${i}`}
+              fill={group.color}
+              onMouseEnter={this.setTooltipCallback('post')}
+              onMouseLeave={this.clearTooltipState}
+              onMouseOver={this.highlightSegment}
+              onMouseOut={this.clearHighlight}
+              shape={<Rectangle onMouseEnter={this.getSegmentCallback(group.key)} />}
+            />
+          ))}
+        </BarChart>
+      </ResponsiveContainer>
     </section>);
   }
 }

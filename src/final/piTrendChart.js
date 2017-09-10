@@ -109,8 +109,8 @@ class PITrendChart extends Component {
         >
           <XAxis dataKey="surveyDate" ticks={['09/01/2017', '10/01/2017']} tickFormatter={t => format(t, 'MMM')} />
           <YAxis />
-          <CartesianGrid strokeDasharray="3 3"/>
-          <Tooltip content={this.renderTooltip} cursor={false} />
+          <CartesianGrid strokeDasharray="3 3" />
+          <Tooltip content={this.renderTooltip} />
 
           {competitorPreMap.map(competitor => (<Line
             key={competitor.key}
@@ -118,7 +118,7 @@ class PITrendChart extends Component {
             dataKey={competitor.key}
             stroke={competitor.color}
             dot={{ r: 1 }}
-            activeDot={{ r: 3 }}
+            activeDot={{ r: 5 }}
           />))}
           {competitorPostMap.map(competitor => (<Line
             key={competitor.key}
@@ -127,7 +127,7 @@ class PITrendChart extends Component {
             stroke={competitor.color}
             strokeDasharray={competitor.strokeStyle}
             dot={{ r: 1 }}
-            activeDot={{ r: 3 }}
+            activeDot={{ r: 5 }}
           />))}
         </LineChart>
       </ResponsiveContainer>

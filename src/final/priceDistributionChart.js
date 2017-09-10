@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Cell, Rectangle, ResponsiveContainer } from 'recharts';
-import { get, set, find, cloneDeep } from 'lodash';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Rectangle, ResponsiveContainer } from 'recharts';
+import { cloneDeep } from 'lodash';
 
 const apiData =[{
   "name": "Virtual Comp.",
@@ -256,7 +256,7 @@ const GROUPINGS_PRE = Object.keys(DISTRIBUTION_GROUPS).map((group, i) => ({ labe
 const GROUPINGS_POST = Object.keys(DISTRIBUTION_GROUPS).map((group, i) => ({ label: group, key: `price_distribution.post.${group}.percentage`, color: DISTRIBUTION_GROUPS[group].color.post }));
 
 const TooltipContent = ({ data, activeType, activeSegment }) => {
-  const tooltipData = get(data, `price_distribution.${activeType}`);
+  const tooltipData = data.price_distribution[activeType];
 
   return (<ul className="group-info">
     <li>{data.name} — {activeType}</li>
@@ -279,7 +279,7 @@ const AwaitingData = () => (<div>Awaiting Data</div>);
 class PriceDistributionChart extends Component {
   state = {
     width: 500,
-    height: 400,
+    height: 250,
 
     activeBar: null,
     activeType: null,
@@ -295,14 +295,14 @@ class PriceDistributionChart extends Component {
   formatData() {
     const data = apiData;
     const formattedData = data.map((d) => {
-      const preData = get(d, 'price_distribution.post');
+      const preData = d.price_distribution.post;
       if (!Object.keys(preData).length) {
         const transformedData = cloneDeep(d);
-        set(transformedData, 'price_distribution.post', {
+        transformedData.price_distribution.post = {
           nodata: {
             percentage: 100
           }
-        });
+        };
 
         return transformedData;
       }
@@ -345,8 +345,8 @@ class PriceDistributionChart extends Component {
 
   renderTooltip = (...all) => {
     const { formattedData, activeBar, activeType, activeSegment } = this.state;
-    const currentCompetitor = find(formattedData, ["name", activeBar]);
-    const hasPostData = !get(currentCompetitor, 'price_distribution.post.nodata');
+    const currentCompetitor = formattedData.filter(d => d.name === activeBar)[0];
+    const hasPostData = !(currentCompetitor && currentCompetitor.price_distribution.post.nodata);
 
     const hasNoData = (!hasPostData && activeType === "post");
 

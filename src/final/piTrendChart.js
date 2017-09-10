@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Dot, ResponsiveContainer } from 'recharts';
-import { get, set, filter } from 'lodash';
 import { format } from 'date-fns';
 
 const competitors = ["Virtual Comp.", "Competitor 1", "Competitor 2", "Competitor 3"];
@@ -68,7 +67,7 @@ const CustomTooltip = ({ data: surveyData }) => (<div className="f-trend-tooltip
 class PITrendChart extends Component {
   state = {
     width: 500,
-    height: 400,
+    height: 250,
     formattedData: [],
 
     currentLine: null,
@@ -88,7 +87,7 @@ class PITrendChart extends Component {
   }
 
   renderTooltip = ({ label }) => {
-    const currentWeek = filter(this.state.formattedData, ["surveyDate", label])[0];
+    const currentWeek = this.state.formattedData.filter(d => d.surveyDate === label)[0];
 
     if (!currentWeek) return;
 

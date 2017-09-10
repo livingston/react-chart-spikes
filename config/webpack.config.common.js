@@ -1,6 +1,5 @@
 const path = require('path');
 const webpack = require('webpack');
-const merge = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const autoprefixer = require('autoprefixer');
 
@@ -67,10 +66,4 @@ const common = {
   }
 };
 
-const environmentConfig = {
-  entry: {
-    app: ['./src/app.js']
-  }
-};
-
-module.exports = merge(common, environmentConfig);
+module.exports = common;

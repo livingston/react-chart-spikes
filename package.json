@@ -13,6 +13,7 @@
     "babel-core": "6.26.0",
     "babel-eslint": "^7.2.3",
     "babel-loader": "7.1.2",
+    "babel-plugin-lodash": "^3.2.11",
     "babel-plugin-recharts": "^1.1.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
@@ -20,6 +21,7 @@
     "babel-plugin-transform-react-jsx": "^6.24.1",
     "babel-preset-env": "^1.6.0",
     "babel-preset-react": "^6.24.1",
+    "compression-webpack-plugin": "^1.0.0",
     "cross-env": "5.0.5",
     "css-loader": "0.28.7",
     "eslint": "4.6.1",
@@ -35,6 +37,7 @@
     "rimraf": "^2.6.1",
     "sass-loader": "^6.0.6",
     "style-loader": "^0.18.2",
+    "uglifyjs-webpack-plugin": "^0.4.6",
     "webpack": "3.5.6",
     "webpack-dashboard": "1.0.0-5",
     "webpack-dev-middleware": "^1.12.0",
@@ -63,13 +66,10 @@
     ]
   },
   "scripts": {
-    "clean": "rimraf build/* dist/*",
     "precommit": "lint-staged",
-    "prestart": "npm run clean",
+    "prestart": "rimraf build/*",
     "start": "node ./scripts/dev-server.js",
-    "compress": "./scripts/compress.sh",
-    "prebuild": "npm run clean",
-    "build": "webpack -p --config ./config/webpack.config.js",
-    "package": "cross-env NODE_ENV=production npm run build && npm run compress"
+    "prebuild": "rimraf dist/*",
+    "build": "webpack -p --config ./config/webpack.config.prod.js"
   }
 }

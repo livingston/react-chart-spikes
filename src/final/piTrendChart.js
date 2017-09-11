@@ -4,7 +4,22 @@ import { format, parse } from 'date-fns';
 
 const colors = ["#0094fc", "#c94908", "#62993f", "#0067a8", "#1d2f57"];
 
-const MONTH_TICKS = Array.from(new Array(13), (v, month) => (format(new Date(2017, month, 1), 'MM/DD/YYYY')));
+const getMonthTicks = (data) => {
+  const ticks = [];
+  let currentMonth;
+  let currentDate;
+
+  data.trendData && data.trendData.forEach(({ surveyDate }) => {
+    currentDate = parse(surveyDate);
+
+    if (currentDate.getMonth() !== currentMonth) {
+      currentMonth = currentDate.getMonth();
+      ticks.push(format(currentDate, 'MM/DD/YYYY'));
+    }
+  });
+
+  return ticks;
+};
 
 const CustomTooltip = ({ data: surveyData, competitors }) => (<div className="f-trend-tooltip">
   <h4>Survey Week – {surveyData.surveyDate}</h4>
@@ -22,7 +37,7 @@ class PITrendChart extends Component {
   state = {
     width: 500,
     height: 250,
-    data: [],
+    data: {},
 
     competitorPreMap: [],
     competitorPostMap: [],
@@ -89,7 +104,7 @@ class PITrendChart extends Component {
             {/* console.log(activeLabel, activeTooltipIndex, activePayload); */}
           }}
         >
-          <XAxis dataKey="surveyDate" ticks={MONTH_TICKS} tickFormatter={t => (parse(t).getMonth() === 0 ? format(t, 'MMM ‘YY') : format(t, 'MMM'))} />
+          <XAxis dataKey="surveyDate" ticks={getMonthTicks(data)} tickFormatter={t => (parse(t).getMonth() === 0 ? format(t, 'MMM ‘YY') : format(t, 'MMM'))} />
           <YAxis domain={['dataMin - 10', 'dataMax + 10']} />
           <CartesianGrid strokeDasharray="3 3" />
           <Tooltip content={this.renderTooltip} />
@@ -108,7 +123,7 @@ class PITrendChart extends Component {
             dataKey={competitor.key}
             stroke={competitor.color}
             strokeDasharray={competitor.strokeStyle}
-            dot={{ r: 1 }}
+            dot={{ r: 0 }}
             activeDot={{ r: 5 }}
           />))}
         </LineChart>

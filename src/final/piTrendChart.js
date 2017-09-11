@@ -113,6 +113,7 @@ class PITrendChart extends Component {
           />))}
         </LineChart>
       </ResponsiveContainer>
+      <label className="filter-trend"><input type="checkbox" checked={this.props.filterData} onChange={this.props.onFilter} /> Show All</label>
     </section>);
   }
 }

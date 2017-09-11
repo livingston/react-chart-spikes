@@ -67,10 +67,26 @@ const piTrendData = {
   trendData: data
 };
 
-const Final = () => (<section className="f page">
-  <PITrendChart data={comparisonData} />
-  <PriceDistributionChart />
-  <PITrendChart data={piTrendData} />
-</section>);
+class Final extends Component {
+  state = {
+    filterData: false,
+
+    trendData: comparisonData
+  }
+
+  onFilter = () => {
+    const { filterData } = this.state;
+    const data = !filterData ? piTrendData : comparisonData;
+
+    this.setState(({ filterData: !filterData, trendData: data }));
+  }
+
+  render() {
+    return (<section className="f page">
+      <PITrendChart data={this.state.trendData} onFilter={this.onFilter} />
+      <PriceDistributionChart />
+    </section>);
+  }
+}
 
 export default Final;

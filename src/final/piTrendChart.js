@@ -9,8 +9,8 @@ const getMonthTicks = (data) => {
   let currentMonth;
   let currentDate;
 
-  data.trendData && data.trendData.forEach(({ surveyDate }) => {
-    currentDate = parse(surveyDate);
+  data.trendData && data.trendData.forEach(({ pricingWeekStart }) => {
+    currentDate = parse(pricingWeekStart);
 
     if (currentDate.getMonth() !== currentMonth) {
       currentMonth = currentDate.getMonth();
@@ -21,17 +21,20 @@ const getMonthTicks = (data) => {
   return ticks;
 };
 
-const CustomTooltip = ({ data: surveyData, competitors }) => (<div className="f-trend-tooltip">
-  <h4>Survey Week – {surveyData.surveyDate}</h4>
-  <ul>
-    <li><span /><span>Pre</span><span>Post</span></li>
-    {surveyData.data.map((competitor, index) => (<li key={index} style={{ color: colors[index] }}>
-      <span>{competitors[index]}</span>
-      <span>{competitor.pre}</span>
-      <span>{competitor.post}</span>
-    </li>))}
-  </ul>
-</div>);
+const CustomTooltip = ({ data: surveyData, competitors }) => {
+  const pricingWeekData = surveyData.data;
+  return (<div className="f-trend-tooltip">
+    <h4>Survey Week – {surveyData.pricingWeekStart}</h4>
+    <ul>
+      <li><span /><span>Pre</span><span>Post</span></li>
+      {Object.keys(pricingWeekData).map((competitor, index) => (<li key={competitor} style={{ color: colors[index] }}>
+        <span>{competitor}</span>
+        <span>{pricingWeekData[competitor].pre}</span>
+        <span>{pricingWeekData[competitor].post}</span>
+      </li>))}
+    </ul>
+  </div>);
+};
 
 class PITrendChart extends Component {
   state = {
@@ -43,7 +46,7 @@ class PITrendChart extends Component {
     competitorPostMap: [],
 
     currentLine: null,
-    currentSurveyDate: null
+    currentpricingWeekStart: null
   }
 
   populateData(props) {
@@ -52,15 +55,17 @@ class PITrendChart extends Component {
     const competitorPreMap = data.competitors.map((c, i) => ({
       label: c,
       color: colors[i],
-      key: `data[${i}].pre`
+      key: `data["${c}"].pre`
     }));
 
     const competitorPostMap = data.competitors.map((c, i) => ({
       label: c,
-      key: `data[${i}].post`,
       color: colors[i],
+      key: `data["${c}"].post`,
       strokeStyle: "3 4 5 2"
     }));
+
+    console.log(competitorPostMap);
 
     this.setState({
       competitorPreMap,
@@ -77,7 +82,7 @@ class PITrendChart extends Component {
     this.populateData(nextProps);
   }
 
-  clearState = () => this.setState({ currentLine: null, currentSurveyDate: null })
+  clearState = () => this.setState({ currentLine: null, currentpricingWeekStart: null })
 
   setCurrentState = (currentLine, currentWeek) => {
     this.setState({ currentLine, currentWeek });
@@ -85,7 +90,7 @@ class PITrendChart extends Component {
 
   renderTooltip = ({ label }) => {
     const { data } = this.state;
-    const currentWeek = data.trendData.filter(d => d.surveyDate === label)[0];
+    const currentWeek = data.trendData.filter(d => d.pricingWeekStart === label)[0];
 
     if (!currentWeek) return;
 
@@ -101,10 +106,10 @@ class PITrendChart extends Component {
           data={data.trendData}
           margin={{ top: 0, left: 0, bottom: 0, right: 0 }}
           onMouseMove={({ activeLabel, activeTooltipIndex, activePayload }) => {
-            {/* console.log(activeLabel, activeTooltipIndex, activePayload); */}
+            {/* console.log(activeLabel, activeTooltipIndex, activePayload); */ }
           }}
         >
-          <XAxis dataKey="surveyDate" ticks={getMonthTicks(data)} tickFormatter={t => (parse(t).getMonth() === 0 ? format(t, 'MMM ‘YY') : format(t, 'MMM'))} />
+          <XAxis dataKey="pricingWeekStart" ticks={getMonthTicks(data)} tickFormatter={t => (parse(t).getMonth() === 0 ? format(t, 'MMM ‘YY') : format(t, 'MMM'))} />
           <YAxis domain={['dataMin - 10', 'dataMax + 10']} />
           <CartesianGrid strokeDasharray="3 3" />
           <Tooltip content={this.renderTooltip} />

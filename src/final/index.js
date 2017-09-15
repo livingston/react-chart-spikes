@@ -9,7 +9,7 @@ const minRange = 80;
 const maxRange = 120;
 const variation = 0.03;
 
-const getNextValue = (ref) => chance.integer({ min: Math.max(minRange, ref * (1-variation)), max: Math.min(maxRange, ref * (1+variation)) });
+const getNextValue = (ref) => chance.integer({ min: Math.max(minRange, ref * (1 - variation)), max: Math.min(maxRange, ref * (1 + variation)) });
 
 const startDate = new Date('01/01/2017');
 let currentDate = startDate;
@@ -53,32 +53,32 @@ const topCompetitor4 = new Competitor(80);
 const vc2 = new Competitor(100, true);
 const competitor5 = new Competitor(80, true);
 
-let surveyDate;
+let pricingWeekStart;
 
 do {
-  surveyDate = format(currentDate, 'MM/DD/YYYY');
+  pricingWeekStart = format(currentDate, 'MM/DD/YYYY');
 
   topCompetitorsTrend.push({
-    surveyDate,
-    data: [
-      vc1.next(),
-      topCompetitor1.next(),
-      topCompetitor2.next(),
-      topCompetitor3.next(),
-      topCompetitor4.next(),
-    ]
+    pricingWeekStart,
+    data: {
+      "Virtual Comp.": vc1.next(),
+      "Competitor 1": topCompetitor1.next(),
+      "Competitor 2": topCompetitor2.next(),
+      "Competitor 3": topCompetitor3.next(),
+      "Competitor 4": topCompetitor4.next(),
+    }
   });
 
   competitorTrend.push({
-    surveyDate,
-    data: [
-      vc2.next(),
-      competitor5.next()
-    ]
+    pricingWeekStart,
+    data: {
+      "Virtual Comp.": vc2.next(),
+      "Competitor 1": competitor5.next()
+    }
   });
 
   currentDate = addDays(currentDate, 7);
-} while(differenceInDays(currentDate, startDate) < 365)
+} while (differenceInDays(currentDate, startDate) < 365)
 
 const comparisonData = {
   competitors: ["Virtual Comp.", "Competitor 1"],

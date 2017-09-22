@@ -88,6 +88,10 @@ class PITrendChart extends Component {
     this.setState({ currentLine, currentWeek });
   }
 
+  get isCompare() {
+    return (this.props.data.competitors.length === 2);
+  }
+
   renderTooltip = ({ label }) => {
     const { data } = this.state;
     const currentWeek = data.trendData.filter(d => d.pricingWeekStart === label)[0];
@@ -99,7 +103,7 @@ class PITrendChart extends Component {
 
   render() {
     const { width, height, data, competitorPreMap, competitorPostMap } = this.state;
-
+    console.log('isCompare', this.isCompare);
     return (<section className="f-trend chart-wrapper">
       <ResponsiveContainer width="100%" height={height}>
         <LineChart
@@ -114,7 +118,7 @@ class PITrendChart extends Component {
           <CartesianGrid strokeDasharray="3 3" />
           <Tooltip content={this.renderTooltip} />
 
-          {competitorPreMap.map(competitor => (<Line
+          {!this.props.showPost && competitorPreMap.map(competitor => (<Line
             key={competitor.key}
             type="monotone"
             dataKey={competitor.key}
@@ -122,18 +126,20 @@ class PITrendChart extends Component {
             dot={{ r: 0 }}
             activeDot={{ r: 5 }}
           />))}
-          {competitorPostMap.map(competitor => (<Line
+
+          {this.props.showPost && competitorPostMap.map(competitor => (<Line
             key={competitor.key}
             type="monotone"
             dataKey={competitor.key}
             stroke={competitor.color}
-            strokeDasharray={competitor.strokeStyle}
+            strokeDasharray={this.isCompare ? '' : competitor.strokeStyle}
             dot={{ r: 0 }}
             activeDot={{ r: 5 }}
           />))}
         </LineChart>
       </ResponsiveContainer>
-      <label className="filter-trend"><input type="checkbox" checked={this.props.filterData} onChange={this.props.onFilter} /> Show All</label>
+      <label className="filter-trend"><input type="checkbox" checked={this.props.compare} onChange={this.props.onFilter} value="compare" />Compare</label>
+      <label className="filter-trend"><input type="checkbox" checked={this.props.showPost} onChange={this.props.togglePrePost} value="post" />Post</label>
     </section>);
   }
 }

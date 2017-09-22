@@ -11,7 +11,7 @@ const variation = 0.03;
 
 const getNextValue = (ref) => chance.integer({ min: Math.max(minRange, ref * (1 - variation)), max: Math.min(maxRange, ref * (1 + variation)) });
 
-const startDate = new Date('01/01/2017');
+const startDate = new Date('06/01/2017');
 let currentDate = startDate;
 
 const topCompetitorsTrend = [];
@@ -56,16 +56,16 @@ const competitor5 = new Competitor(80, true);
 let pricingWeekStart;
 
 do {
-  pricingWeekStart = format(currentDate, 'MM/DD/YYYY');
+  pricingWeekStart = format(currentDate, 'DD/MM/YYYY');
 
   topCompetitorsTrend.push({
     pricingWeekStart,
     data: {
       "Virtual Comp.": vc1.next(),
-      "Competitor 1": topCompetitor1.next(),
-      "Competitor 2": topCompetitor2.next(),
-      "Competitor 3": topCompetitor3.next(),
-      "Competitor 4": topCompetitor4.next(),
+      "Ahold": topCompetitor1.next(),
+      "Lidl": topCompetitor2.next(),
+      "Aldi": topCompetitor3.next(),
+      "Jumbo": topCompetitor4.next(),
     }
   });
 
@@ -84,29 +84,39 @@ const comparisonData = {
   competitors: ["Virtual Comp.", "Competitor 1"],
   trendData: competitorTrend
 };
+console.log(comparisonData)
 
 const piTrendData = {
-  competitors: ["Virtual Comp.", "Competitor 1", "Competitor 2", "Competitor 3", "Competitor 4"],
+  competitors: ["Virtual Comp.", "Ahold", "Lidl", "Aldi", "Jumbo"],
   trendData: topCompetitorsTrend
 };
 
+console.log(piTrendData);
+
 class Final extends Component {
   state = {
-    filterData: false,
+    compare: false,
+    showPost: false,
 
     trendData: comparisonData
   }
 
-  onFilter = () => {
+  onFilter = ({ target }) => {
     const { filterData } = this.state;
     const data = !filterData ? piTrendData : comparisonData;
 
     this.setState(({ filterData: !filterData, trendData: data }));
   }
 
+  togglePrePost = ({ target }) => {
+    const showPost = target.value === 'post'
+
+    this.setState(({ showPost }) => ({ showPost: !showPost }));
+  }
+
   render() {
     return (<section className="f page">
-      <PITrendChart data={this.state.trendData} onFilter={this.onFilter} />
+      <PITrendChart data={this.state.trendData} onFilter={this.onFilter} togglePrePost={this.togglePrePost} showPost={this.state.showPost} />
       <PriceDistributionChart />
     </section>);
   }

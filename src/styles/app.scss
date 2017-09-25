@@ -2,6 +2,9 @@
 @import '~react-table/react-table.css';
 @import '~fixed-data-table-2/dist/fixed-data-table.css';
 
+@import '~ag-grid/dist/styles/ag-grid.css';
+@import '~ag-grid/dist/styles/theme-fresh.css';
+
 html, body { height: 100%; }
 
 body {
@@ -326,4 +329,62 @@ h3 {
 
 .filter-trend {
   margin: 20px;
+}
+
+.ag-grid {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.ag-table {
+  flex: 1;
+  margin: 20px 0 0;
+}
+
+.ag-fresh {
+  .ag-cell-no-focus {
+    outline: none;
+  }
+
+  .ag-pinned-left-header {
+    .ag-header-row:first-child {
+      display: none;
+    }
+
+    .ag-header-row {
+      height: 100% !important;
+      top: 0 !important;
+    }
+
+    .ag-header-cell {
+
+    }
+  }
+
+  .ag-header-group-cell-with-group {
+    text-align: center;
+  }
+
+  .ag-header-group-text:empty {
+    display: none;
+  }
+
+  .ag-cell {
+    line-height: 50px;
+    padding: 0 15px;
+    box-sizing: border-box;
+  }
+
+  .ag-header-cell {
+    padding: 0 15px;
+    box-sizing: border-box;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+  }
+
+  .ag-header {
+    background: none;
+  }
 }

@@ -44,6 +44,9 @@
     "webpack-merge": "^4.1.0"
   },
   "dependencies": {
+    "ag-grid": "^13.2.0",
+    "ag-grid-enterprise": "^13.2.0",
+    "ag-grid-react": "^13.2.0",
     "babel-polyfill": "6.26.0",
     "chance": "1.0.11",
     "d3-axis": "^1.0.8",
@@ -55,6 +58,7 @@
     "normalize.css": "^7.0.0",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
+    "react-dom-factories": "^1.0.1",
     "react-router-dom": "4.2.2",
     "react-table": "^6.5.3",
     "recharts": "1.0.0-alpha.4",

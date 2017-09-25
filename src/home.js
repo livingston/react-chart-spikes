@@ -9,6 +9,7 @@ import {
 import Final from './final';
 import ArticleDetailsFDT from './articleDetails/fixedDataTable';
 import ArticleDetailsReactTable from './articleDetails/reactTable';
+import AgGrid from './articleDetails/agGrid';
 
 const NotFound = ({ location }) => (
   <div>
@@ -30,6 +31,7 @@ class Home extends Component {
             <li><NavLink exact={true} to="/">Dashboard</NavLink></li>
             <li><NavLink to="/react-table">React Table</NavLink></li>
             <li><NavLink to="/fixed-data-table">Fixed Data Table</NavLink></li>
+            <li><NavLink to="/ag-grid">Ag Grid</NavLink></li>
           </ul>
         </nav>
 
@@ -38,6 +40,7 @@ class Home extends Component {
             <Route exact path="/" component={Final}/>
             <Route exact path="/react-table" component={ArticleDetailsReactTable}/>
             {<Route exact path="/fixed-data-table" component={ArticleDetailsFDT}/>}
+            {<Route exact path="/ag-grid" component={AgGrid}/>}
             <Route component={NotFound}/>
           </Switch>
         </article>

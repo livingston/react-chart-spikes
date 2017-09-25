@@ -55,6 +55,7 @@
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-router-dom": "4.2.2",
+    "react-table": "^6.5.3",
     "recharts": "1.0.0-alpha.4",
     "rumble-charts": "^1.4.1",
     "victory": "0.21.5"

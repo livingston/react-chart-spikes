@@ -5,7 +5,8 @@ const common = require('./webpack.config.common');
 const devConfig = {
   entry: {
     app: ['./src/app.js']
-  }
+  },
+  devtool: false
 };
 
 module.exports = merge(common, devConfig);

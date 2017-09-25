@@ -7,7 +7,7 @@ import {
 } from 'react-router-dom';
 
 import Final from './final';
-// import ArticleDetails from './articleDetails';
+import ArticleDetailsFDT from './articleDetails/fixedDataTable';
 import ArticleDetailsReactTable from './articleDetails/reactTable';
 
 const NotFound = ({ location }) => (
@@ -29,6 +29,7 @@ class Home extends Component {
           <ul>
             <li><NavLink exact={true} to="/">Dashboard</NavLink></li>
             <li><NavLink to="/react-table">React Table</NavLink></li>
+            <li><NavLink to="/fixed-data-table">Fixed Data Table</NavLink></li>
           </ul>
         </nav>
 
@@ -36,7 +37,7 @@ class Home extends Component {
           <Switch>
             <Route exact path="/" component={Final}/>
             <Route exact path="/react-table" component={ArticleDetailsReactTable}/>
-            {/* <Route exact path="/article-details" component={ArticleDetails}/> */}
+            {<Route exact path="/fixed-data-table" component={ArticleDetailsFDT}/>}
             <Route component={NotFound}/>
           </Switch>
         </article>

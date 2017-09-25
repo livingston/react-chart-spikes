@@ -32,21 +32,6 @@ const columnData = [{
 }];
 const competitors = ['Virtual Competitor', 'Aldi', 'Lidl', 'Ahold', 'Jumbo'];
 
-const data = Array.from(new Array(1000), () => ({
-  productKey: chance.ssn({ dashes: false }),
-  productName: chance.sentence().replace(/\./, ''),
-  metro: {
-    storeName: chance.sentence().replace(/\./, ''),
-    buyingPrice: chance.floating({ min: 40, max: 60, fixed: 2 }),
-    price: chance.floating({ min: 40, max: 60, fixed: 2 })
-  },
-  competitors: competitors.map((competitor, index) => ({
-    name: competitor,
-    storeName: chance.sentence().replace(/\./, ''),
-    price: chance.floating({ min: 40, max: 60, fixed: 2 })
-  }))
-}));
-
 competitors.forEach((competitor, index) => {
   columnData.push({
     Header: competitor,
@@ -56,11 +41,30 @@ competitors.forEach((competitor, index) => {
 
 
 class ArticleDetailsReactTable extends PureComponent {
-  state = {}
+  state = {
+    data: []
+  }
+
+  componentDidMount() {
+    this.setState({ data: Array.from(new Array(1000), () => ({
+      productKey: chance.ssn({ dashes: false }),
+      productName: chance.sentence().replace(/\./, ''),
+      metro: {
+        storeName: chance.sentence().replace(/\./, ''),
+        buyingPrice: chance.floating({ min: 40, max: 60, fixed: 2 }),
+        price: chance.floating({ min: 40, max: 60, fixed: 2 })
+      },
+      competitors: competitors.map((competitor, index) => ({
+        name: competitor,
+        storeName: chance.sentence().replace(/\./, ''),
+        price: chance.floating({ min: 40, max: 60, fixed: 2 })
+      }))
+    })) });
+  }
 
   render() {
     return (<ReactTable
-      data={data}
+      data={this.state.data}
       columns={columnData}
       showPagination={false}
       defaultPageSize={1000}

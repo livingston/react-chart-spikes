@@ -5,93 +5,92 @@ require('chance');
 import PriceDistributionChart from './priceDistributionChart';
 import PITrendChart from './piTrendChart';
 
-const minRange = 80;
-const maxRange = 120;
-const variation = 0.03;
+// const minRange = 80;
+// const maxRange = 120;
+// const variation = 0.03;
 
-const getNextValue = (ref) => chance.integer({ min: Math.max(minRange, ref * (1 - variation)), max: Math.min(maxRange, ref * (1 + variation)) });
+// const getNextValue = (ref) => chance.integer({ min: Math.max(minRange, ref * (1 - variation)), max: Math.min(maxRange, ref * (1 + variation)) });
 
-const startDate = new Date('06/01/2017');
-let currentDate = startDate;
+// const startDate = new Date('06/01/2017');
+// let currentDate = startDate;
 
-const topCompetitorsTrend = [];
-const competitorTrend = [];
+// const topCompetitorsTrend = [];
+// const competitorTrend = [];
 
-class Competitor {
-  constructor(start, includePost = false) {
-    this.includePost = includePost;
-    this.current = {
-      pre: start,
-      post: start
-    }
-  }
+// class Competitor {
+//   constructor(start, includePost = false) {
+//     this.includePost = includePost;
+//     this.current = {
+//       pre: start,
+//       post: start
+//     }
+//   }
 
-  next() {
-    const { pre, post } = this.current;
+//   next() {
+//     const { pre, post } = this.current;
 
-    const nextPre = getNextValue(pre);
-    const nextPost = this.includePost ? getNextValue(post) : null;
+//     const nextPre = getNextValue(pre);
+//     const nextPost = this.includePost ? getNextValue(post) : null;
 
-    this.current = {
-      pre: nextPre,
-      post: nextPost
-    }
+//     this.current = {
+//       pre: nextPre,
+//       post: nextPost
+//     }
 
-    return ({
-      pre: nextPre,
-      post: nextPost,
-    });
-  }
-}
+//     return ({
+//       pre: nextPre,
+//       post: nextPost,
+//     });
+//   }
+// }
 
-const vc1 = new Competitor(100);
-const topCompetitor1 = new Competitor(90);
-const topCompetitor2 = new Competitor(80);
-const topCompetitor3 = new Competitor(90);
-const topCompetitor4 = new Competitor(80);
+// const vc1 = new Competitor(100);
+// const topCompetitor1 = new Competitor(90);
+// const topCompetitor2 = new Competitor(80);
+// const topCompetitor3 = new Competitor(90);
+// const topCompetitor4 = new Competitor(80);
 
-const vc2 = new Competitor(100, true);
-const competitor5 = new Competitor(80, true);
+// const vc2 = new Competitor(100, true);
+// const competitor5 = new Competitor(80, true);
 
-let pricingWeekStart;
+// let pricingWeekStart;
 
-do {
-  pricingWeekStart = format(currentDate, 'DD/MM/YYYY');
+// do {
+//   pricingWeekStart = format(currentDate, 'DD/MM/YYYY');
 
-  topCompetitorsTrend.push({
-    pricingWeekStart,
-    data: {
-      "Virtual Comp.": vc1.next(),
-      "Ahold": topCompetitor1.next(),
-      "Lidl": topCompetitor2.next(),
-      "Aldi": topCompetitor3.next(),
-      "Jumbo": topCompetitor4.next(),
-    }
-  });
+//   topCompetitorsTrend.push({
+//     pricingWeekStart,
+//     data: {
+//       "Virtual Comp.": vc1.next(),
+//       "Ahold": topCompetitor1.next(),
+//       "Lidl": topCompetitor2.next(),
+//       "Aldi": topCompetitor3.next(),
+//       "Jumbo": topCompetitor4.next(),
+//     }
+//   });
 
-  competitorTrend.push({
-    pricingWeekStart,
-    data: {
-      "Virtual Comp.": vc2.next(),
-      "Competitor 1": competitor5.next()
-    }
-  });
+//   competitorTrend.push({
+//     pricingWeekStart,
+//     data: {
+//       "Virtual Comp.": vc2.next(),
+//       "Competitor 1": competitor5.next()
+//     }
+//   });
 
-  currentDate = addDays(currentDate, 7);
-} while (differenceInDays(currentDate, startDate) < 365)
+//   currentDate = addDays(currentDate, 7);
+// } while (differenceInDays(currentDate, startDate) < 365)
 
-const comparisonData = {
-  competitors: ["Virtual Comp.", "Competitor 1"],
-  trendData: competitorTrend
-};
-console.log(comparisonData)
+// const comparisonData = () => ({
+//   competitors: ["Virtual Comp.", "Competitor 1"],
+//   trendData: competitorTrend
+// });
 
-const piTrendData = {
-  competitors: ["Virtual Comp.", "Ahold", "Lidl", "Aldi", "Jumbo"],
-  trendData: topCompetitorsTrend
-};
+// const piTrendData = {
+//   competitors: ["Virtual Comp.", "Ahold", "Lidl", "Aldi", "Jumbo"],
+//   trendData: topCompetitorsTrend
+// };
 
-console.log(piTrendData);
+// console.log(piTrendData);
 
 class Final extends Component {
   state = {

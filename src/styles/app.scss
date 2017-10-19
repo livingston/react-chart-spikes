@@ -1,5 +1,4 @@
 @import '~normalize.css/normalize.css';
-@import '~react-table/react-table.css';
 @import '~fixed-data-table-2/dist/fixed-data-table.css';
 
 @import '~ag-grid/dist/styles/ag-grid.css';
@@ -427,4 +426,11 @@ h3 {
   // .fixedDataTableCellGroupLayout_cellGroupWrapper:first-child {
   //   top: -50px;
   // }
+}
+
+.full-height-column {
+  input {
+    margin: 20px 0 0;
+    width: 95%;
+  }
 }

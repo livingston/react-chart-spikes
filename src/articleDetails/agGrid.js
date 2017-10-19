@@ -2,10 +2,10 @@ import React, { PureComponent } from 'react';
 
 import { AgGridReact } from 'ag-grid-react';
 
-const competitors = ['Virtual Competitor', 'Aldi', 'Lidl', 'Ahold', 'Jumbo'];
-const stores = ['Makro Braga', 'Makro Gaia', 'Makro Matosinhos', 'Makro Albufeira', 'Makro Faro', 'Makro Alfragide', 'Makro Cascais', 'Makro Coimbra', 'Makro Leiria', 'Makro Palmela'];
+const competitors = ['VC', 'Competitor 1', 'Competitor 2', 'Competitor 3', 'Competitor 4'];
+const stores = ['Store 1', 'Store 2', 'Store 3', 'Store 4', 'Store 5', 'Store 6', 'Store 7', 'Store 8', 'Store 9', 'Store 10'];
 
-const data = Array.from(new Array(10000), () => ({
+const getData = () => (Array.from(new Array(10000), () => ({
   productKey: chance.ssn({ dashes: false }),
   productName: chance.sentence({ words: 2 }).replace(/\./, ''),
   metro: {
@@ -18,7 +18,7 @@ const data = Array.from(new Array(10000), () => ({
     storeName: chance.pickone(stores),
     price: chance.floating({ min: 40, max: 60, fixed: 2 })
   }))
-}));
+})));
 
 const getColumnFieldMeta = (headerName, field, pinned = '') => ({
   headerName,
@@ -71,7 +71,7 @@ class AgGrid extends PureComponent {
       <div className="ag-table ag-fresh">
         <AgGridReact
           columnDefs={columnDefs}
-          rowData={data}
+          rowData={getData()}
           rowSelection="single"
           rowHeight={50}
           suppressCellSelection

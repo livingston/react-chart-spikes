@@ -3,8 +3,8 @@ import { Table, Column, Cell, ColumnGroup } from 'fixed-data-table-2';
 import { get } from 'lodash';
 import Dimensions from 'react-dimensions';
 
-const competitors = ['VC', 'Competitor 1', 'Competitor 2', 'Competitor 3', 'Competitor 4'];
-const stores = ['Store 1', 'Store 2', 'Store 3', 'Store 4', 'Store 5', 'Store 6', 'Store 7', 'Store 8', 'Store 9', 'Store 10'];
+const competitors = ['Virtual Competitor', 'Aldi', 'Lidl', 'Ahold', 'Jumbo'];
+const stores = ['Makro Braga', 'Makro Gaia', 'Makro Matosinhos', 'Makro Albufeira', 'Makro Faro', 'Makro Alfragide', 'Makro Cascais', 'Makro Coimbra', 'Makro Leiria', 'Makro Palmela'];
 
 const data = Array.from(new Array(10000), () => ({
   productKey: chance.ssn({ dashes: false }),
@@ -32,77 +32,44 @@ const RowCell = ({ rowIndex, columnKey, data, ...props }) => (<Cell {...props}>
 </Cell>);
 
 class ArticleDetailsFDT extends PureComponent {
-  state = {
-    data,
-    filterProductKey: '',
-    filterProductName: ''
-  }
-
-  static compareValue(value, searchTerm) {
-    return !searchTerm || String(value).toLocaleLowerCase().indexOf(searchTerm.toLocaleLowerCase()) > -1;
-  }
-
-  get filteredData() {
-    const { data, filterProductKey, filterProductName } = this.state;
-    const compareValue = this.constructor.compareValue;
-
-    return data.filter(article => {
-
-      return compareValue(article.productKey, filterProductKey) && compareValue(article.productName, filterProductName)
-    });
-  }
-
-  updateFilterFor = (filterKey) => ({ target }) => {
-    this.setState({
-      [filterKey]: target.value
-    })
-  }
-
   render() {
     const { containerWidth, containerHeight } = this.props;
-    const filteredData = this.filteredData;
 
     return (
     <Table
       rowHeight={50}
-        rowsCount={filteredData.length}
+      rowsCount={data.length}
       width={containerWidth}
       height={containerHeight}
       headerHeight={50}
       groupHeaderHeight={50}
-      data={filteredData}
+      data={data}
       onRowClick={(event, rowIndex) => console.log(data[rowIndex])}
     >
       <ColumnGroup
         header=""
-        width={200}
+        width={100}
         fixed={true}
       >
         <Column
-          width={200}
+          width={100}
           fixed={true}
           columnKey="productKey"
-          header={<Cell className="full-height-column">
-            Product Key
-            <input type="text" onChange={this.updateFilterFor('filterProductKey')} />
-          </Cell>}
-          cell={<RowCell data={filteredData} />}
+          header={<Cell className="full-height-column">Product Key</Cell>}
+          cell={<RowCell data={data} />}
         />
       </ColumnGroup>
       <ColumnGroup
         header=""
-        width={200}
+        width={150}
         fixed={true}
       >
         <Column
           fixed={true}
           columnKey="productName"
-          header={<Cell className="full-height-column">
-            Product Name
-            <input type="text" onChange={this.updateFilterFor('filterProductName')} />
-          </Cell>}
-          cell={<RowCell data={filteredData} />}
-          width={200}
+          header={<Cell className="full-height-column">Product Name</Cell>}
+          cell={<RowCell data={data} />}
+          width={150}
         />
       </ColumnGroup>
 
@@ -114,21 +81,21 @@ class ArticleDetailsFDT extends PureComponent {
         <Column
           columnKey="metro.storeName"
           header={<Cell>Store Name</Cell>}
-          cell={<RowCell data={filteredData} />}
+          cell={<RowCell data={data} />}
           width={100}
           flexGrow={1}
         />
         <Column
           columnKey="metro.buyingPrice"
           header={<Cell>Buying Price</Cell>}
-          cell={<RowCell data={filteredData} />}
+          cell={<RowCell data={data} />}
           width={100}
           flexGrow={1}
         />
         <Column
           columnKey="metro.price"
           header={<Cell>Price</Cell>}
-          cell={<RowCell data={filteredData} />}
+          cell={<RowCell data={data} />}
           width={100}
           flexGrow={1}
         />
@@ -143,14 +110,14 @@ class ArticleDetailsFDT extends PureComponent {
         <Column
           columnKey={competitor.storeNameKey}
           header={<Cell>Store Name</Cell>}
-          cell={<RowCell data={filteredData} />}
+          cell={<RowCell data={data} />}
           width={100}
           flexGrow={1}
         />
         <Column
           columnKey={competitor.priceKey}
           header={<Cell>Price</Cell>}
-          cell={<RowCell data={filteredData} />}
+          cell={<RowCell data={data} />}
           width={100}
           flexGrow={1}
         />

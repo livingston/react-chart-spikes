@@ -8,7 +8,6 @@ import {
 
 import Final from './final';
 import ArticleDetailsFDT from './articleDetails/fixedDataTable';
-import AgGrid from './articleDetails/agGrid';
 import Colli from './final/colli';
 
 const NotFound = ({ location }) => (
@@ -29,8 +28,7 @@ class Home extends Component {
         <nav>
           <ul>
             <li><NavLink exact={true} to="/">Dashboard</NavLink></li>
-            <li><NavLink to="/fixed-data-table">Fixed Data Table</NavLink></li>
-            <li><NavLink to="/ag-grid">Ag Grid</NavLink></li>
+            <li><NavLink to="/articles">Article Details</NavLink></li>
             <li><NavLink to="/colli">Colli</NavLink></li>
           </ul>
         </nav>
@@ -38,8 +36,7 @@ class Home extends Component {
         <article>
           <Switch>
             <Route exact path="/" component={Final}/>
-            {<Route exact path="/fixed-data-table" component={ArticleDetailsFDT}/>}
-            {<Route exact path="/ag-grid" component={AgGrid}/>}
+            {<Route exact path="/articles" component={ArticleDetailsFDT}/>}
             {<Route exact path="/colli" component={Colli}/>}
             <Route component={NotFound}/>
           </Switch>

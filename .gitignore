@@ -14,4 +14,5 @@ node_modules/
 .eslintcache
 .yarn-integrity
 .DS_Store
+.idea
 

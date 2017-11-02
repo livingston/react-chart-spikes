@@ -64,6 +64,7 @@ class Scatter extends Component {
       xScale: this.xScale,
       yScale: this.yScale,
       zoomLevel: 1,
+      zoomFactor: 0.2,
       maxZoomLevel: 4,
       minZoomLevel: 1
     };
@@ -117,11 +118,12 @@ class Scatter extends Component {
 
   zoomIn = () => {
     this.setState(state => {
-      const { zoomLevel, maxZoomLevel } = state;
+      const { zoomFactor, zoomLevel, maxZoomLevel } = state;
 
       if (zoomLevel < maxZoomLevel) {
-        this.zoom.scaleBy(select(this.chart), zoomLevel + 1);
-        return { zoomLevel: zoomLevel + 1 };
+        const zoomIn = zoomLevel * (1 + zoomFactor);
+        this.zoom.scaleTo(select(this.chart), zoomIn);
+        return { zoomLevel: zoomIn };
       }
 
       return { zoomLevel: maxZoomLevel };
@@ -130,11 +132,12 @@ class Scatter extends Component {
 
   zoomOut = () => {
     this.setState(state => {
-      const { zoomLevel, minZoomLevel } = state;
+      const { zoomFactor, zoomLevel, minZoomLevel } = state;
 
       if (zoomLevel > minZoomLevel) {
-        this.zoom.scaleBy(select(this.chart), 1 - Math.abs(zoomLevel));
-        return { zoomLevel: 1 - Math.abs(zoomLevel) };
+        const zoomOut = zoomLevel * (1 - zoomFactor);
+        this.zoom.scaleTo(select(this.chart), zoomOut);
+        return { zoomLevel: zoomOut };
       }
 
       return { zoomLevel: minZoomLevel };

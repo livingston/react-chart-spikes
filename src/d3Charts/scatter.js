@@ -62,7 +62,10 @@ class Scatter extends Component {
       height: 100,
       currentPoint: null,
       xScale: this.xScale,
-      yScale: this.yScale
+      yScale: this.yScale,
+      zoomLevel: 1,
+      maxZoomLevel: 4,
+      minZoomLevel: 1
     };
   }
 
@@ -70,7 +73,7 @@ class Scatter extends Component {
     this.updateDimensions();
 
     this.zoom = zoom()
-      .scaleExtent([1, 3])
+      .scaleExtent([this.state.minZoomLevel, this.state.maxZoomLevel])
       .on("zoom", this.onZoom);
 
     select(this.chart)
@@ -112,8 +115,34 @@ class Scatter extends Component {
     // select(this.chart).select('.dots').attr('transform', d3Event.transform);
   }
 
+  zoomIn = () => {
+    this.setState(state => {
+      const { zoomLevel, maxZoomLevel } = state;
+
+      if (zoomLevel < maxZoomLevel) {
+        this.zoom.scaleBy(select(this.chart), zoomLevel + 1);
+        return { zoomLevel: zoomLevel + 1 };
+      }
+
+      return { zoomLevel: maxZoomLevel };
+    });
+  }
+
+  zoomOut = () => {
+    this.setState(state => {
+      const { zoomLevel, minZoomLevel } = state;
+
+      if (zoomLevel > minZoomLevel) {
+        this.zoom.scaleBy(select(this.chart), 1 - Math.abs(zoomLevel));
+        return { zoomLevel: 1 - Math.abs(zoomLevel) };
+      }
+
+      return { zoomLevel: minZoomLevel };
+    });
+  }
+
   render() {
-    const { width, height, currentPoint, xScale, yScale } = this.state;
+    const { width, height, currentPoint, xScale, yScale, zoomLevel, maxZoomLevel, minZoomLevel } = this.state;
 
     xScale.range([padding, width - padding]);
     yScale.range([height - yPadding, yPadding]);
@@ -132,6 +161,10 @@ class Scatter extends Component {
           <li><span style={{ backgroundColor: "#f00" }} />Competitor 1</li>
           <li><span style={{ backgroundColor: "#00f" }} />Competitor 2</li>
         </ul>
+        <div className="d3-controls">
+          <button className="d3-zoom-in" onClick={this.zoomIn} disabled={zoomLevel === maxZoomLevel}>+</button>
+          <button className="d3-zoom-out" onClick={this.zoomOut} disabled={zoomLevel === minZoomLevel}>-</button>
+        </div>
       </section>
       <section className="chart" ref={n => (this.node = n)}>
         <FlexibleWrapper onResize={this.updateDimensions}>

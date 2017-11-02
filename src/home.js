@@ -8,7 +8,8 @@ import {
 
 import Final from './final';
 import ArticleDetailsFDT from './articleDetails/fixedDataTable';
-import Colli from './final/colli';
+// import Colli from './final/colli';
+import Scatter from './d3Charts/scatter';
 
 const NotFound = ({ location }) => (
   <div>
@@ -29,16 +30,18 @@ class Home extends Component {
           <ul>
             <li><NavLink exact={true} to="/">Dashboard</NavLink></li>
             <li><NavLink to="/articles">Article Details</NavLink></li>
-            <li><NavLink to="/colli">Colli</NavLink></li>
+            {/* <li><NavLink to="/colli">Colli</NavLink></li> */}
+            <li><NavLink to="/scatter">Scatter</NavLink></li>
           </ul>
         </nav>
 
         <article>
           <Switch>
-            <Route exact path="/" component={Final}/>
-            {<Route exact path="/articles" component={ArticleDetailsFDT}/>}
-            {<Route exact path="/colli" component={Colli}/>}
-            <Route component={NotFound}/>
+            <Route exact path="/" component={Final} />
+            <Route exact path="/scatter" component={Scatter} />
+            <Route exact path="/articles" component={ArticleDetailsFDT} />
+            {/* <Route exact path="/colli" component={Colli} /> */}
+            <Route component={NotFound} />
           </Switch>
         </article>
       </main>

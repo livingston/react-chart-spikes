@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { maxBy, minBy } from 'lodash';
 
 import { scaleLinear } from 'd3-scale';
+import { zoom } from 'd3-zoom';
+import { select, event as d3Event } from 'd3-selection';
 
 import FlexibleWrapper from '../ui/flexibleWrapper.js';
 
@@ -38,24 +40,56 @@ const YAxis = ({ scale, padding, height, left }) => (<g className="axis y-axis" 
   </g>))}
 </g>)
 
+const axisHeight = 50;
+const axisWidth = 50;
+const padding = 50;
+const yPadding = padding + axisHeight;
+
 class Scatter extends Component {
   constructor(props) {
     super(props);
+
+    const minX = minBy(data, (d) => d.x).x;
+    const maxX = maxBy(data, (d) => d.x).x;
+    const minY = minBy(data, (d) => d.y).y;
+    const maxY = maxBy(data, (d) => d.y).y;
+
+    this.xScale = scaleLinear().domain([minX, maxX]);
+    this.yScale = scaleLinear().domain([minY, maxY]);
+
     this.state = {
       width: 100,
       height: 100,
-      currentPoint: null
+      currentPoint: null,
+      xScale: this.xScale,
+      yScale: this.yScale
     };
   }
 
   componentDidMount() {
     this.updateDimensions();
+
+    this.zoom = zoom()
+      .scaleExtent([1, 3])
+      .on("zoom", this.onZoom);
+
+    select(this.chart)
+      .call(this.zoom)
+      .on("dblclick.zoom", null);
   }
 
   updateDimensions = () => {
+    const { clientWidth: width, clientHeight: height } = this.node;
     this.setState({
-      width: this.node.clientWidth,
-      height: this.node.clientHeight
+      width,
+      height
+    }, () => {
+        this.zoom.translateExtent([[0, 0], [width, height]]);
+
+      // setTimeout(() => {
+      //   console.log('zooming');
+      //   this.zoom.scaleBy(select(this.chart), 3);
+      // }, 3000);
     });
   }
 
@@ -65,23 +99,26 @@ class Scatter extends Component {
 
   clearPoint = () => (this.setState({ currentPoint: null }))
 
+  onZoom = () => {
+    const { xScale, yScale } = this;
+
+    const updatedXScale = d3Event.transform.rescaleX(xScale);
+    const updatedYScale = d3Event.transform.rescaleY(yScale);
+
+    this.setState({
+      xScale: updatedXScale,
+      yScale: updatedYScale
+    });
+    // select(this.chart).select('.dots').attr('transform', d3Event.transform);
+  }
+
   render() {
-    const { width, height, currentPoint } = this.state;
+    const { width, height, currentPoint, xScale, yScale } = this.state;
 
-    const minX = minBy(data, (d) => d.x).x;
-    const maxX = maxBy(data, (d) => d.x).x;
-    const minY = minBy(data, (d) => d.y).y;
-    const maxY = maxBy(data, (d) => d.y).y;
+    xScale.range([padding, width - padding]);
+    yScale.range([height - yPadding, yPadding]);
 
-    const axisHeight = 50;
-    const axisWidth = 50;
-    const padding = 50;
-    const yPadding = padding + axisHeight;
-
-    const xScale = scaleLinear().domain([minX, maxX]).range([padding, width - padding]);
-    const yScale = scaleLinear().domain([minY, maxY]).range([height - yPadding, yPadding]);
-
-    return (<section className="chart-wrapper">
+    return (<section className="chart-wrapper d3">
       <section className="chart-legend">
         <h3>Scatter Plot</h3>
         {currentPoint ?
@@ -98,7 +135,7 @@ class Scatter extends Component {
       </section>
       <section className="chart" ref={n => (this.node = n)}>
         <FlexibleWrapper onResize={this.updateDimensions}>
-          <svg width={width} height={height}>
+          <svg width={width} height={height} ref={node => (this.chart = node)}>
             <g className="dots">
               {data.map((datum, i) => <Dot
                 point={datum} xScale={xScale} yScale={yScale} key={i}

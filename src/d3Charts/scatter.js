@@ -169,7 +169,10 @@ class Scatter extends Component {
       <section className="chart" ref={n => (this.node = n)}>
         <FlexibleWrapper onResize={this.updateDimensions}>
           <svg width={width} height={height} ref={node => (this.chart = node)}>
-            <g className="dots">
+            <defs>
+              <clipPath id="scatter-clip"><rect x={padding} y={yPadding} width={width - (padding * 2)} height={height - axisHeight - (padding * 2)} /></clipPath>
+            </defs>
+            <g className="dots" clipPath="url(#scatter-clip)">
               {data.map((datum, i) => <Dot
                 point={datum} xScale={xScale} yScale={yScale} key={i}
                 onMouseOver={() => (this.showPoint(datum))}

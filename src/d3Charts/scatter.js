@@ -10,18 +10,16 @@ import FlexibleWrapper from '../ui/flexibleWrapper.js';
 // Test data
 require('chance');
 
-const competitors = { c1: "Competitor 1", c2: "Competitor 2" };
-
 const scatterDatum = () => ({
   x: chance.integer({min: 0, max: 1000}),
   y: chance.integer({min: 0, max: 1000}),
-  competitor: chance.pickone(['c1', 'c2'])
+  name: chance.word()
 });
-const data = Array.apply(null, Array(100)).map(scatterDatum);
+const data = Array.apply(null, Array(1000)).map(scatterDatum);
 
 const Dot = ({ point, xScale, yScale, onMouseOver, onMouseOut }) => (<circle onMouseOver={onMouseOver} onMouseOut={onMouseOut}
   cx={xScale(point.x)} cy={yScale(point.y)} r={5}
-  fill={(point.competitor === 'c1' ? '#f00' : '#00f')}
+  fill="#33adff"
 />);
 
 const XAxis = ({ scale, top, width, left }) => (<g className="axis x-axis" transform={`translate(0, ${top})`}>
@@ -32,7 +30,7 @@ const XAxis = ({ scale, top, width, left }) => (<g className="axis x-axis" trans
   </g>))}
 </g>)
 
-const YAxis = ({ scale, padding, height, left }) => (<g className="axis y-axis" transform={`translate(0, ${padding})`}>
+const YAxis = ({ scale, padding, height, left, top }) => (<g className="axis y-axis" transform={`translate(${padding}, ${top})`}>
   <line x1={left} x2={left} y1={padding} y2={height} />
   {scale.ticks().map(tick => (<g transform={`translate(0, ${scale(tick)})`} key={tick}>
     <line x1={left - 5} x2={left} y1={0} y2={0} />
@@ -58,8 +56,8 @@ class Scatter extends Component {
     this.yScale = scaleLinear().domain([minY, maxY]);
 
     this.state = {
-      width: 100,
-      height: 100,
+      width: 500,
+      height: 500,
       currentPoint: null,
       xScale: this.xScale,
       yScale: this.yScale,
@@ -68,6 +66,14 @@ class Scatter extends Component {
       maxZoomLevel: 4,
       minZoomLevel: 1
     };
+  }
+
+  get filteredData() {
+    const { xScale, yScale } = this.state;
+    const [minX, maxX] = xScale.domain();
+    const [minY, maxY] = yScale.domain();
+
+    return data.filter(({ x, y }) => (x >= minX && x <= maxX && y >= minY && y <= maxY));
   }
 
   componentDidMount() {
@@ -89,11 +95,6 @@ class Scatter extends Component {
       height
     }, () => {
         this.zoom.translateExtent([[0, 0], [width, height]]);
-
-      // setTimeout(() => {
-      //   console.log('zooming');
-      //   this.zoom.scaleBy(select(this.chart), 3);
-      // }, 3000);
     });
   }
 
@@ -111,9 +112,13 @@ class Scatter extends Component {
 
     this.setState({
       xScale: updatedXScale,
-      yScale: updatedYScale
+      yScale: updatedYScale,
+      zoomLevel: d3Event.transform.k
     });
-    // select(this.chart).select('.dots').attr('transform', d3Event.transform);
+  }
+
+  updateZoomLevel = () => {
+    this.zoom.scaleTo(select(this.chart), this.state.zoomLevel);
   }
 
   zoomIn = () => {
@@ -122,12 +127,11 @@ class Scatter extends Component {
 
       if (zoomLevel < maxZoomLevel) {
         const zoomIn = zoomLevel * (1 + zoomFactor);
-        this.zoom.scaleTo(select(this.chart), zoomIn);
         return { zoomLevel: zoomIn };
       }
 
       return { zoomLevel: maxZoomLevel };
-    });
+    }, this.updateZoomLevel);
   }
 
   zoomOut = () => {
@@ -136,34 +140,29 @@ class Scatter extends Component {
 
       if (zoomLevel > minZoomLevel) {
         const zoomOut = zoomLevel * (1 - zoomFactor);
-        this.zoom.scaleTo(select(this.chart), zoomOut);
         return { zoomLevel: zoomOut };
       }
 
       return { zoomLevel: minZoomLevel };
-    });
+    }, this.updateZoomLevel);
   }
 
   render() {
     const { width, height, currentPoint, xScale, yScale, zoomLevel, maxZoomLevel, minZoomLevel } = this.state;
 
     xScale.range([padding, width - padding]);
-    yScale.range([height - yPadding, yPadding]);
+    yScale.range([height - axisHeight - padding, padding]);
 
     return (<section className="chart-wrapper d3">
       <section className="chart-legend">
         <h3>Scatter Plot</h3>
         {currentPoint ?
-          <div className="currentPoint" style={{ backgroundColor: (currentPoint.competitor === 'c1' ? '#f00' : '#00f') }}>
-            <div>{competitors[currentPoint.competitor]}</div>
+          <div className="currentPoint" style={{ backgroundColor: '#33adff' }}>
+            <div>name: {currentPoint.name}</div>
             <div>x: {currentPoint.x}</div>
             <div>y: {currentPoint.y}</div>
           </div>
         : null }
-        <ul className="d3-legend">
-          <li><span style={{ backgroundColor: "#f00" }} />Competitor 1</li>
-          <li><span style={{ backgroundColor: "#00f" }} />Competitor 2</li>
-        </ul>
         <div className="d3-controls">
           <button className="d3-zoom-in" onClick={this.zoomIn} disabled={zoomLevel === maxZoomLevel}>+</button>
           <button className="d3-zoom-out" onClick={this.zoomOut} disabled={zoomLevel === minZoomLevel}>-</button>
@@ -173,17 +172,17 @@ class Scatter extends Component {
         <FlexibleWrapper onResize={this.updateDimensions}>
           <svg width={width} height={height} ref={node => (this.chart = node)}>
             <defs>
-              <clipPath id="scatter-clip"><rect x={padding} y={yPadding} width={width - (padding * 2)} height={height - axisHeight - (padding * 2)} /></clipPath>
+              <clipPath id="scatter-clip"><rect x={padding} y={0} width={width - (padding * 2)} height={height} /></clipPath>
             </defs>
             <g className="dots" clipPath="url(#scatter-clip)">
-              {data.map((datum, i) => <Dot
+              {this.filteredData.map((datum, i) => <Dot
                 point={datum} xScale={xScale} yScale={yScale} key={i}
                 onMouseOver={() => (this.showPoint(datum))}
                 onMouseOut={this.clearPoint}
               />)}
             </g>
             <XAxis scale={xScale} top={height - axisHeight} left={padding} width={width - padding} />
-            <YAxis scale={yScale} left={axisWidth} padding={padding} height={height - axisHeight - padding} />
+            <YAxis scale={yScale} top={padding} left={axisWidth} padding={0} height={height - axisHeight - padding} />
           </svg>
         </FlexibleWrapper>
       </section>
